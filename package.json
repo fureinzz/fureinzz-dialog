@@ -1,0 +1,30 @@
+{
+  "name": "@fureinzz/fureinzz-dialog",
+  "version": "1.0.0",
+  "description": "Web component that creates a dialog box",
+  "main": "fureinzz-dialog.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fureinzz/fureinzz-dialog.git"
+  },
+  "keywords": [
+    "dialog",
+    "modal",
+    "popup",
+    "javascript",
+    "webcomponent"
+  ],
+  "author": "fureinzz",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/fureinzz/fureinzz-dialog/issues"
+  },
+  "homepage": "https://github.com/fureinzz/fureinzz-dialog#readme",
+  "dependencies": {
+    "@fureinzz/fureinzz-backdrop": "^1.0.0",
+    "lit-element": "^2.3.1"
+  }
+}
