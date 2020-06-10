@@ -54,6 +54,18 @@ class DialogElement extends LitElement {
     _closeBackdrop() {
         this._backdrop.close()
     }
+    updated(changedProperties) {
+        changedProperties.forEach((oldValue, property) => {
+            switch (property) {
+                case 'opened':
+                    this.openedChanged()
+                    break;
+                case 'noBackdrop':
+                    this.noBackdropChanged()
+                    break;
+            }
+        });
+    }
 }
 
 customElements.define('fureinzz-dialog', DialogElement)
