@@ -97,6 +97,12 @@ class DialogElement extends LitElement {
             this.noBackdrop ? this._closeBackdrop() : this._openBackdrop()
         }
     }
+    connectedCallback(){
+        super.connectedCallback()
+        
+        this.setAttribute('role', 'dialog')
+        this.addEventListener('animationend', this._animationEnd)
+    }
 }
 
 customElements.define('fureinzz-dialog', DialogElement)
