@@ -46,7 +46,19 @@ class DialogElement extends LitElement {
     close() { 
         this.opened = false
     }
+    confirm() {
+        this._canceled = false
+        this.close()
+        
+        this.dispatchEvent( new CustomEvent('state-changed', {detail: {canceled: this._canceled}}))
+    }
+    cancel() {
+        this._canceled = true
+        this.close()
 
+        this.dispatchEvent( new CustomEvent('state-changed', {detail: {canceled: this._canceled}}))
+    }
+    
     _openBackdrop() {
         document.body.appendChild(this._backdrop)
         this._backdrop.open()
