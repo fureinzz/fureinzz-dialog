@@ -306,7 +306,7 @@ export class DialogElement extends LitElement {
             document.addEventListener('keydown', this._captureKey, true)
         }
         removeEventListeners() {
-            this.removeEventListener('focus', this._captureBlur, true)
+            this.removeEventListener('blur', this._captureBlur, true)
             this.removeEventListener('focus', this._captureFocus, true)
             document.removeEventListener('click', this._captureClick, true)
             document.removeEventListener('keydown', this._captureKey, true)
