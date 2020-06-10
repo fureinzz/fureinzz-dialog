@@ -27,6 +27,12 @@ class nodeFocusManager {
     isTabbable(element) {
         return this.isFocusable(element) && this.isVisible(element)
     }
+    lastIndex(value) {
+        return this.result.map(item => item.tabIndex).lastIndexOf(value)
+    }
+    firstIndex(value) {
+        return this.result.map(item => item.tabIndex).indexOf(value)
+    }
 }
 
 export const focusManager = new nodeFocusManager()
