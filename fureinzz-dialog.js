@@ -32,7 +32,12 @@ class DialogElement extends LitElement {
             </style>
             <slot></slot>`
     }
-
+    open() { 
+        this.opened = true 
+    }
+    close() { 
+        this.opened = false
+    }
 }
 
 customElements.define('fureinzz-dialog', DialogElement)
