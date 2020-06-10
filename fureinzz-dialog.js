@@ -58,7 +58,21 @@ class DialogElement extends LitElement {
 
         this.dispatchEvent( new CustomEvent('state-changed', {detail: {canceled: this._canceled}}))
     }
-    
+    _checkAnimation() {
+        const {animationDuration} = this.style
+        
+        if(animationDuration == '') {
+            const {animationDuration} = getComputedStyle(this)
+            
+            if(animationDuration !== '0s') return true
+        }
+
+        return false
+    }
+    _animationEnd() {
+        if(this.opened === false) this.style.display = 'none'
+    }
+
     _openBackdrop() {
         document.body.appendChild(this._backdrop)
         this._backdrop.open()
