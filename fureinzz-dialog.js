@@ -9,9 +9,17 @@ class DialogElement extends LitElement {
         this.noBackdrop = false
         this.closeOnEsc = false
         this.closeOnOutsideClick = false
+        this._hasAnimation = null
+        this._canceled = null
+        this._indexOfTab = -1
+        this._backdrop = document.createElement('fureinzz-backdrop')
     }
     static get properties() {
         return {
+            _hasAnimation: {type: Boolean},
+            _canceled: {type: Boolean},
+            _indexOfTab: {type: Number},
+            _backdrop: {type: HTMLElement},
             opened: {type: Boolean,  attribute: 'opened', reflect: true},
             noBackdrop: {type: Boolean,  attribute: 'no-backdrop', reflect: true},
             closeOnEsc: {type: Boolean,  attribute: 'close-on-esc', reflect: true},
