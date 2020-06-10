@@ -24,6 +24,9 @@ class nodeFocusManager {
             ?  matchesSelector.call(element, ':not([disabled])')
             :  false 
     }
+    isTabbable(element) {
+        return this.isFocusable(element) && this.isVisible(element)
+    }
 }
 
 export const focusManager = new nodeFocusManager()
