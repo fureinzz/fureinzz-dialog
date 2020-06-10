@@ -92,6 +92,16 @@ class DialogElement extends LitElement {
             }
         });
     }
+    _captureClick(event) {
+        const {target} = event
+
+        // Close overlay when a click occurs outside the dialog 
+        if(this.contains(target) === false) {
+            if(this.closeOnOutsideClick) this.cancel()
+        } 
+        else this._searchButton(target) 
+        
+    }  
     noBackdropChanged() {
         if(this.opened) {
             this.noBackdrop ? this._closeBackdrop() : this._openBackdrop()
