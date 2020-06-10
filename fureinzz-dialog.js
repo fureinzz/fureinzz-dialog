@@ -66,6 +66,11 @@ class DialogElement extends LitElement {
             }
         });
     }
+    noBackdropChanged() {
+        if(this.opened) {
+            this.noBackdrop ? this._closeBackdrop() : this._openBackdrop()
+        }
+    }
 }
 
 customElements.define('fureinzz-dialog', DialogElement)
