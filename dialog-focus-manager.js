@@ -3,14 +3,19 @@ const matchesSelector = node.matches || node.oMatchesSelector || node.mozMatches
 node.msMatchesSelector || node.webkitMatchesSelector || node.matchesSelector
 
 class nodeFocusManager {
-    result = []
+    /**
+     * Focusable elements  
+     * @type {Array}
+     * @private
+     **/ 
+    _result = []
 
-    getTabbableNodes(node) {
-        this.result = []
-        
-        this.collectNodes(node)
-        return this.result
-    }
+
+    /** 
+     * Returns true if the element is visually accessible
+     * @param {!HTMLElement} element 
+     * @returns {Boolean}
+     **/ 
     isVisible(element) {
         const {display, visibility} = element.style
         
@@ -21,6 +26,12 @@ class nodeFocusManager {
 
         return false
     }
+
+    /** 
+     * Returns true if the element is available for focus
+     * @param {!HTMLElement} element
+     * @returns {Boolean}
+     * */ 
     isFocusable(element) {
         const focusableElements = matchesSelector.call(element, 'button, textarea, input, select, object')
         const tabIndex = element.tabIndex >= 0
@@ -30,14 +41,40 @@ class nodeFocusManager {
             ?  matchesSelector.call(element, ':not([disabled])')
             :  false 
     }
+
+    /** 
+     * Returns true if the element is available for focusing via `Tab` or `Tab + Shift`
+     * @param {!HTMLElement} element
+     * @returns {Boolean}
+     * */ 
     isTabbable(element) {
         return this.isFocusable(element) && this.isVisible(element)
-    }
-    collectNodes(element) {
-        if(element.nodeType !== Node.ELEMENT_NODE) return false
-        if(this.isVisible(element) === false) return false
+    }    
 
-        if(this.isTabbable(element)) {this.pushNode(element)}
+    /** 
+     * Returns array of focusable elements
+     * @param {!HTMLElement} element
+     * @returns {Array} 
+     * */ 
+    getTabbableNodes(element) {
+        this._result = []
+        this.collectNodes(element)
+
+        return this._result
+    }
+
+    /** 
+     * A recursive function that finds all focusable elements inside the parent `element`
+     * @param {!HTMLElement} element
+     * @returns {void}
+     * */ 
+    collectNodes(element) {
+        // Returns false if the element is not visible or the Element is not ELEMENT_NODE
+        if(!this.isVisible(element) || element.nodeType !== Node.ELEMENT_NODE) return false
+        
+        if(this.isTabbable(element)) {
+            this.pushNode(element)
+        }
 
         const children = element.children
         if(children.length) {
@@ -46,36 +83,51 @@ class nodeFocusManager {
             }
         }
     }
+
+    /** 
+     * Adding an element to a sorted array by inserting it
+     * @param {!HTMLElement} element
+     * @returns {void}
+     * */ 
     pushNode(element) {
         const tabIndex = element.tabIndex
 
         const {left, right} = this.sortNodes(tabIndex)
-        this.result = [...left, {element, tabIndex}, ...right]
+        this._result = [...left, {element, tabIndex}, ...right]
     }
-    sortNodes(value, firstValueOfArray = this.result.length ? this.result[0].tabIndex : null) {
+
+    /** 
+     * Returns the two parts of the original array `_result`
+     * @param {!Number} value
+     * @param {?Number} firstValueOfArray
+     * @returns {Object}
+     * */ 
+    sortNodes(value, firstValueOfArray = this._result.length ? this._result[0].tabIndex : null) {
         let left = [], right = [] 
 
+        // if `firstValueOfArray` === null, the new element is the first in the array
         if(firstValueOfArray === null) return {left, right}
         if(value <= firstValueOfArray) {
             const indexOfnewFirstValue = this.lastIndex(firstValueOfArray) + 1
             
-            return indexOfnewFirstValue > this.result.length - 1
-                ? {left: this.result, right}
-                : this.sortNodes(value, this.result[indexOfnewFirstValue].tabIndex)
+            return indexOfnewFirstValue > this._result.length - 1
+                ? {left: this._result, right}
+                : this.sortNodes(value, this._result[indexOfnewFirstValue].tabIndex)
         } else {
             const indexOfFirstValue = this.firstIndex(firstValueOfArray)
 
-            left  = this.result.slice(0, indexOfFirstValue)
-            right = this.result.slice(indexOfFirstValue)
+            left  = this._result.slice(0, indexOfFirstValue)
+            right = this._result.slice(indexOfFirstValue)
 
             return {left, right}
         }
     }
+
     lastIndex(value) {
-        return this.result.map(item => item.tabIndex).lastIndexOf(value)
+        return this._result.map(item => item.tabIndex).lastIndexOf(value)
     }
     firstIndex(value) {
-        return this.result.map(item => item.tabIndex).indexOf(value)
+        return this._result.map(item => item.tabIndex).indexOf(value)
     }
 }
 
