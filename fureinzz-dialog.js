@@ -18,6 +18,21 @@ class DialogElement extends LitElement {
             closeOnOutsideClick: {type: Boolean,  attribute: 'close-on-outside-click', reflect: true},
         }
     }
+    render() {
+        return html`
+            <style>
+                :host{
+                    background-color: #fff;
+                    display: block;
+                    z-index: 1000; 
+                    position: fixed;
+                    top: 50%; left: 50%; 
+                    transform: translate(-50%, -50%)
+                }
+            </style>
+            <slot></slot>`
+    }
+
 }
 
 customElements.define('fureinzz-dialog', DialogElement)
