@@ -102,6 +102,31 @@ class DialogElement extends LitElement {
         else this._searchButton(target) 
         
     }  
+    _captureKey(event) {
+        const {key} = event
+        
+        switch(key) {
+            case 'Escape':
+                this._onEsc()
+                break;
+            case 'Tab':
+                this._onTab(event)
+                break;
+        }
+    }
+    _captureFocus(event) {
+        const {target} = event
+
+        // tabbableNodes = [{element: HTMLElement, tabindex: Number}, ...] => [element, ...]
+        const tabbableNodes = focusManager.getTabbableNodes(this).map(item => item.element)
+        this._indexOfTab = tabbableNodes.indexOf(target)
+    }
+    _captureBlur(event) {
+        const {relatedTarget} = event
+
+        // Reset focus if the user clicked outside of the focused element
+        if(relatedTarget === null) this._indexOfTab = -1
+    }
     noBackdropChanged() {
         if(this.opened) {
             this.noBackdrop ? this._closeBackdrop() : this._openBackdrop()
