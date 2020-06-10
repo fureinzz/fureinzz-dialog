@@ -256,17 +256,11 @@ export class DialogElement extends LitElement {
             if(this.opened) {
                 this.style.display = ''
 
-                this.addEventListener('blur', this._captureBlur, true)
-                this.addEventListener('focus', this._captureFocus, true)
-                document.addEventListener('click', this._captureClick, true)
-                document.addEventListener('keydown', this._captureKey, true)
+                this.initEventListeners()
             } else {
                 if(!this._hasAnimation) this.style.display = 'none'
 
-                this.removeEventListener('focus', this._captureBlur, true)
-                this.removeEventListener('focus', this._captureFocus, true)
-                document.removeEventListener('click', this._captureClick, true)
-                document.removeEventListener('keydown', this._captureKey, true)
+                this.removeEventListeners()
             }
 
             document.body.style.overflow = this.opened ? 'hidden' : ''
@@ -302,10 +296,20 @@ export class DialogElement extends LitElement {
 
             // To remove all event listeners when the component is removed
                 this.removeEventListener('transitionend', this._animationEnd)
-                this.removeEventListener('focus', this._captureBlur, true)
-                this.removeEventListener('focus', this._captureFocus, true)
-                document.removeEventListener('click', this._captureClick, true)
-                document.removeEventListener('keydown', this._captureKey, true)
+                this.removeEventListeners()
+        }
+
+        initEventListeners() {
+            this.addEventListener('blur', this._captureBlur, true)
+            this.addEventListener('focus', this._captureFocus, true)
+            document.addEventListener('click', this._captureClick, true)
+            document.addEventListener('keydown', this._captureKey, true)
+        }
+        removeEventListeners() {
+            this.removeEventListener('focus', this._captureBlur, true)
+            this.removeEventListener('focus', this._captureFocus, true)
+            document.removeEventListener('click', this._captureClick, true)
+            document.removeEventListener('keydown', this._captureKey, true)
         }
 }
 
