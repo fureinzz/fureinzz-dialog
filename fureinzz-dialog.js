@@ -2,6 +2,14 @@ import {LitElement, html} from 'lit-element'
 import '@fureinzz/fureinzz-backdrop'
 
 class DialogElement extends LitElement {
+    constructor() {
+        super()
+
+        this.opened = false
+        this.noBackdrop = false
+        this.closeOnEsc = false
+        this.closeOnOutsideClick = false
+    }
     static get properties() {
         return {
             opened: {type: Boolean,  attribute: 'opened', reflect: true},
