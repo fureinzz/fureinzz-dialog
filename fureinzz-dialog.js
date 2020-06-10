@@ -1,4 +1,5 @@
 import {LitElement, html} from 'lit-element'
+import {focusManager} from './dialog-focus-manager'
 import '@fureinzz/fureinzz-backdrop'
 
 class DialogElement extends LitElement {
@@ -13,6 +14,11 @@ class DialogElement extends LitElement {
         this._canceled = null
         this._indexOfTab = -1
         this._backdrop = document.createElement('fureinzz-backdrop')
+
+        this._captureKey = this._captureKey.bind(this)
+        this._captureClick = this._captureClick.bind(this)
+        this._captureFocus = this._captureFocus.bind(this)
+        this._captureBlur = this._captureBlur.bind(this)
     }
     static get properties() {
         return {
