@@ -46,6 +46,14 @@ class DialogElement extends LitElement {
     close() { 
         this.opened = false
     }
+
+    _openBackdrop() {
+        document.body.appendChild(this._backdrop)
+        this._backdrop.open()
+    }
+    _closeBackdrop() {
+        this._backdrop.close()
+    }
 }
 
 customElements.define('fureinzz-dialog', DialogElement)
