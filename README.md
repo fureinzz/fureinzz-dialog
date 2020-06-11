@@ -18,8 +18,8 @@ If you want to animate a dialog use the Web Animation API
 
 ```css
     @keyframes fadeIn {
-     from {opacity: 0}
-     to {opacity: 1}
+      from {opacity: 0}
+      to   {opacity: 1}
     }
     fureinzz-dialog[opened] {animation: fadeIn .3s ease forwards}
 ```
@@ -31,7 +31,7 @@ If you want to animate a dialog use the Web Animation API
 | `opened` | Boolean | Set **true** to show object contents | `false` |
 | `noBackdrop` | Boolean | Set **true** to disable backdrop overlay  | `false` |
 | `closeOnOustideClick` | Boolean | If  **true**, the dialog will be closed if you click outside of its zone| `false` |
-| `closeOnEsc` | Boolean | If  **true **, then pressing the "Escape" button will close the dialog box| `false` |
+| `closeOnEsc` | Boolean | If **true**, pressing `Esc` will close the dialog| `false` |
 
 
 ## Events
