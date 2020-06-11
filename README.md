@@ -1,5 +1,9 @@
 # &lt;fureinzz-dialog&gt;
 
+[![npm](https://img.shields.io/npm/v/@fureinzz/fureinzz-dialog?style=flat-square)](https://www.npmjs.com/package/@fureinzz/fureinzz-dialog)
+[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg?style=flat-square)](https://www.webcomponents.org/element/@fureinzz/fureinzz-dialog)
+![license](https://img.shields.io/github/license/fureinzz/fureinzz-dialog?style=flat-square)
+
 `<fureinzz-dialog>` is a modern dialog component that provides an extended set of functions for interacting with the user interface. The component implements a focus trap, so when opening a dialog box, the focus will only be directed to the dialog box elements. You can also change the state of the dialog box by assigning the`cancel-button` or `confirm-button` attribute to a button inside the component. When you click this button, the `state-changed` event will appear and the dialog box will close.
 
 **Example:**
