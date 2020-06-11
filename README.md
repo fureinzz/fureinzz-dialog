@@ -17,11 +17,11 @@ If you want to animate a dialog use the Web Animation API
 **Example:**
 
 ```css
-   @keyframes fadeIn {
-       from {opacity: 0}
-       to {opacity: 1}
-     }
-     fureinzz-dialog[opened] {animation: fadeIn .3s ease forwards}
+    @keyframes fadeIn {
+     from {opacity: 0}
+     to {opacity: 1}
+    }
+    fureinzz-dialog[opened] {animation: fadeIn .3s ease forwards}
 ```
 
 
