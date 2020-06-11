@@ -37,7 +37,7 @@ If you want to animate a dialog use the Web Animation API
 ## Events
 | Event | Description | 
 | --- | --- | 
-| `state-changed`  |Triggered when using the `cancel()` or `confirm()` methods|
+| `state-changed`  |Triggered when using the `cancel()` or `confirm()` method|
 
 ## Usage
 
