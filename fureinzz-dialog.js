@@ -6,6 +6,7 @@ export class DialogElement extends LitElement {
     constructor() {
         super()
 
+        this.role = 'dialog'
         this.opened = false
         this.noBackdrop = false
         this.closeOnEsc = false
@@ -22,6 +23,13 @@ export class DialogElement extends LitElement {
     }
     static get properties() {
         return {
+            /** 
+            * The `dialog` role is used to mark up an HTML based application dialog or window that separates content or UI from the rest of the web application or page.
+            * @type {!string}
+            * @public 
+            */ 
+            role: {type: String, reflect: true},
+
             /** 
             * Set opened to true to show the dialog component and to false to hide it.
             * @type {!boolean}
@@ -263,7 +271,7 @@ export class DialogElement extends LitElement {
                 this.removeEventListeners()
             }
 
-            document.body.style.overflow = this.opened ? 'hidden' : ''
+            document.documentElement.style.overflow = this.opened ? 'hidden' : ''
             this.setAttribute('aria-hidden', !this.opened)
         }
         noBackdropChanged() {
@@ -288,7 +296,6 @@ export class DialogElement extends LitElement {
         connectedCallback(){
             super.connectedCallback()
             
-            this.setAttribute('role', 'dialog')
             this.addEventListener('animationend', this._animationEnd)
         }
         disconnectedCallback() {
