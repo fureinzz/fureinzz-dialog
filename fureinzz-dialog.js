@@ -14,7 +14,6 @@ export class DialogElement extends LitElement {
         this._hasAnimation = null
         this._canceled = null
         this._indexOfTab = -1
-        this._backdrop = document.createElement('fureinzz-backdrop')
         
         this._captureKey = this._captureKey.bind(this)
         this._captureClick = this._captureClick.bind(this)
@@ -78,28 +77,38 @@ export class DialogElement extends LitElement {
             * @private
             */ 
             _indexOfTab: {type: Number},
-
-            /** 
-            * The overlay layer 
-            * @type {!HTMLElement}
-            * @private
-            */  
-            _backdrop: {type: HTMLElement}
         }
     }
     render() {
         return html`
             <style>
                 :host{
-                    background-color: #fff;
-                    display: block;
-                    z-index: 1000; 
                     position: fixed;
-                    top: 50%; left: 50%; 
-                    transform: translate(-50%, -50%)
+                    display: flex; align-items: center; justify-content: center;
+                    top: 0; left: 0; right: 0; bottom: 0;
+                    height: 100%; width: 100%;
+                }
+
+                #dialog {
+                    box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12), 0 3px 5px -1px rgba(0, 0, 0, 0.4);
+                    position: relative; 
+                    z-index: 1000;
+                    width: 420px;
+                    background-color: #fff;
+                    border-radius: 5px;
+                    padding: 12px;
+                }
+                #backdrop {
+                    position: absolute;
+                    width: 100%; height: 100%;
+                    background: rgba(0, 0, 0, 0.3)
                 }
             </style>
-            <slot></slot>
+
+            <div id="backdrop" part="backdrop"></div>
+            <div id="dialog">
+                <slot></slot>
+            </div>
         `
     }
 
@@ -236,38 +245,34 @@ export class DialogElement extends LitElement {
     }
     
     // Backdrop
+
         /** 
          * Adds a backdrop to the DOM
          * @protected
          **/ 
-        _openBackdrop() {
-            document.body.appendChild(this._backdrop)
-            this._backdrop.open()
+        _openBackdrop(backdrop) {
+            backdrop.removeAttribute('hidden')
         }
 
         /** 
          * Removing dackdrop
          * @protected 
          **/ 
-        _closeBackdrop() {
-            this._backdrop.close()
+        _closeBackdrop(backdrop) {
+            backdrop.setAttribute('hidden', '')
         }
 
     // Observer's of properties 
         openedChanged() {
-            if(!this.noBackdrop) {
-                this.opened ? this._openBackdrop() : this._closeBackdrop()
-            }
+
 
             this._hasAnimation = this._checkAnimation()
 
             if(this.opened) {
                 this.style.display = ''
-
                 this.initEventListeners()
             } else {
                 if(!this._hasAnimation) this.style.display = 'none'
-
                 this.removeEventListeners()
             }
 
@@ -276,7 +281,8 @@ export class DialogElement extends LitElement {
         }
         noBackdropChanged() {
             if(this.opened) {
-                this.noBackdrop ? this._closeBackdrop() : this._openBackdrop()
+                const backdrop = this.shadowRoot.querySelector('#backdrop')
+                this.noBackdrop ? this._closeBackdrop(backdrop) : this._openBackdrop(backdrop)
             }
         }
 
