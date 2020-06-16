@@ -89,20 +89,29 @@ export class DialogElement extends LitElement {
                 }
 
                 #dialog {
-                    box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12), 0 3px 5px -1px rgba(0, 0, 0, 0.4);
                     position: relative; 
                     z-index: 1000;
-                    width: 420px;
-                    background-color: #fff;
-                    border-radius: 5px;
-                    padding: 12px;
+
+                    animation: var(--dialog-animation);
+                    background: var(--dialog-background, #fff);
+                    padding: var(--dialog-padding, 12px);
+                    margin: var(--dialog-margin, 0);
+                    width: var(--dialog-width, 520px);
+                    height: var(--dialog-height, auto);
+                    box-shadow: var(--dialog-boxShadow);
+                    border-radius: var(--dialog-borderRadius, 5px);
+                    max-height: var(--dialog-maxHeight);
+                    max-width: var(--dialog-maxWidth);
                 }
                 #backdrop {
-                    position: absolute;
+                    position: fixed;
                     z-index: 999;
+                    top: 0; left: 0; right: 0; bottom: 0;
                     width: 100%; height: 100%;
-                    background: rgba(0, 0, 0, 0.3)
+                    background: var(--backdrop-background, #000);
+                    opacity: var(--backdrop-opacity, .5)
                 }
+
             </style>
 
             <div id="backdrop" part="backdrop"></div>
@@ -297,7 +306,7 @@ export class DialogElement extends LitElement {
             super.disconnectedCallback()
 
             // To remove all event listeners when the component is removed
-                this.removeEventListener('transitionend', this._animationEnd)
+                this.removeEventListener('animationend', this._animationEnd)
                 this.removeEventListeners()
         }
         initEventListeners() {
