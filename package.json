@@ -24,7 +24,6 @@
   },
   "homepage": "https://github.com/fureinzz/fureinzz-dialog#readme",
   "dependencies": {
-    "@fureinzz/fureinzz-backdrop": "^1.0.1",
     "lit-element": "^2.3.1"
   }
 }
