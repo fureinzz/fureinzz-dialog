@@ -1,6 +1,5 @@
 import {LitElement, html} from 'lit-element'
 import {focusManager} from './dialog-focus-manager'
-import '@fureinzz/fureinzz-backdrop'
 
 export class DialogElement extends LitElement {
     constructor() {
@@ -100,6 +99,7 @@ export class DialogElement extends LitElement {
                 }
                 #backdrop {
                     position: absolute;
+                    z-index: 999;
                     width: 100%; height: 100%;
                     background: rgba(0, 0, 0, 0.3)
                 }
@@ -171,24 +171,6 @@ export class DialogElement extends LitElement {
     }
 
     /** 
-     * Recursive search for elements with the `cancel-button` and `confirm-button` attributes
-     * @protected 
-     * @param   {!HTMLElement} target
-     * @returns {void}
-     **/ 
-    _searchButton(target) {
-        if(target === this) return false
-        else {
-            if(target.hasAttribute('confirm-button') || target.hasAttribute('cancel-button')) {
-                target.hasAttribute('cancel-button') 
-                    ? this.cancel()
-                    : this.confirm()
-            }
-            else this._searchButton(target.parentNode)
-        }
-    }
-
-    /** 
      * If true then dialog have a animation
      * @protected 
      * @returns {boolean}
@@ -209,13 +191,21 @@ export class DialogElement extends LitElement {
     }
 
     _captureClick(event) {
-        const {target} = event
+        const {path} = event
 
         // Close overlay when a click occurs outside the dialog 
-        if(this.contains(target) === false) {
-            if(this.closeOnOutsideClick) this.cancel()
-        } 
-        else this._searchButton(target) 
+        if(path[0].getAttribute('id') === 'backdrop' || path[0] === this) {
+            if(this.closeOnOutsideClick) {
+                this.cancel()
+            }
+        } else {
+            for(let i = 0; i < path.length; i++) {
+                if(path[i].hasAttribute('cancel-button') || path[i].hasAttribute('confirm-button')) {
+                    path[i].hasAttribute('cancel-button') ? this.cancel() : this.confirm()
+                    break;
+                } else if(path[i].getAttribute('id') === 'dialog') break;
+            }
+        }
         
     }    
     _captureKey(event) {
@@ -247,7 +237,7 @@ export class DialogElement extends LitElement {
     // Backdrop
 
         /** 
-         * Adds a backdrop to the DOM
+         * Show the backdrop
          * @protected
          **/ 
         _openBackdrop(backdrop) {
@@ -264,8 +254,6 @@ export class DialogElement extends LitElement {
 
     // Observer's of properties 
         openedChanged() {
-
-
             this._hasAnimation = this._checkAnimation()
 
             if(this.opened) {
@@ -280,10 +268,11 @@ export class DialogElement extends LitElement {
             this.setAttribute('aria-hidden', !this.opened)
         }
         noBackdropChanged() {
-            if(this.opened) {
-                const backdrop = this.shadowRoot.querySelector('#backdrop')
-                this.noBackdrop ? this._closeBackdrop(backdrop) : this._openBackdrop(backdrop)
-            }
+            const backdrop = this.shadowRoot.querySelector('#backdrop')
+            
+            this.noBackdrop 
+                ? this._closeBackdrop(backdrop) 
+                : this._openBackdrop(backdrop)
         }
 
     // Lifecycle methods
@@ -311,17 +300,16 @@ export class DialogElement extends LitElement {
                 this.removeEventListener('transitionend', this._animationEnd)
                 this.removeEventListeners()
         }
-
         initEventListeners() {
             this.addEventListener('blur', this._captureBlur, true)
             this.addEventListener('focus', this._captureFocus, true)
-            document.addEventListener('click', this._captureClick, true)
+            this.addEventListener('click', this._captureClick, true)
             document.addEventListener('keydown', this._captureKey, true)
         }
         removeEventListeners() {
             this.removeEventListener('blur', this._captureBlur, true)
             this.removeEventListener('focus', this._captureFocus, true)
-            document.removeEventListener('click', this._captureClick, true)
+            this.removeEventListener('click', this._captureClick, true)
             document.removeEventListener('keydown', this._captureKey, true)
         }
 }
