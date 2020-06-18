@@ -1,9 +1,15 @@
-import {LitElement, html} from 'lit-element'
-import {focusManager} from './dialog-focus-manager'
+import {LitElement} from 'lit-element'
+import {focusManager} from './src/focus-manager'
+import {template} from './src/template'
 
 export class DialogElement extends LitElement {
     constructor() {
         super()
+        
+        // Initializing the component template
+        this.shadowRoot.append(template.content.cloneNode(true))
+
+        this.$backdrop = this.shadowRoot.querySelector('#backdrop')
 
         this.role = 'dialog'
         this.opened = false
@@ -77,48 +83,6 @@ export class DialogElement extends LitElement {
             */ 
             _indexOfTab: {type: Number},
         }
-    }
-    render() {
-        return html`
-            <style>
-                :host{
-                    position: fixed;
-                    display: flex; align-items: center; justify-content: center;
-                    top: 0; left: 0; right: 0; bottom: 0;
-                    height: 100%; width: 100%;
-                }
-
-                #dialog {
-                    position: relative; 
-                    z-index: 1000;
-
-                    animation: var(--dialog-animation);
-                    background: var(--dialog-background, #fff);
-                    padding: var(--dialog-padding, 12px);
-                    margin: var(--dialog-margin, 0);
-                    width: var(--dialog-width, 520px);
-                    height: var(--dialog-height, auto);
-                    box-shadow: var(--dialog-boxShadow);
-                    border-radius: var(--dialog-borderRadius, 5px);
-                    max-height: var(--dialog-maxHeight);
-                    max-width: var(--dialog-maxWidth);
-                }
-                #backdrop {
-                    position: fixed;
-                    z-index: 999;
-                    top: 0; left: 0; right: 0; bottom: 0;
-                    width: 100%; height: 100%;
-                    background: var(--backdrop-background, #000);
-                    opacity: var(--backdrop-opacity, .5)
-                }
-
-            </style>
-
-            <div id="backdrop" part="backdrop"></div>
-            <div id="dialog">
-                <slot></slot>
-            </div>
-        `
     }
 
     open() { 
@@ -249,16 +213,16 @@ export class DialogElement extends LitElement {
          * Show the backdrop
          * @protected
          **/ 
-        _openBackdrop(backdrop) {
-            backdrop.removeAttribute('hidden')
+        _openBackdrop() {
+            this.$backdrop.removeAttribute('hidden')
         }
 
         /** 
          * Removing dackdrop
          * @protected 
          **/ 
-        _closeBackdrop(backdrop) {
-            backdrop.setAttribute('hidden', '')
+        _closeBackdrop() {
+            this.$backdrop.setAttribute('hidden', '')
         }
 
     // Observer's of properties 
@@ -278,16 +242,15 @@ export class DialogElement extends LitElement {
                 if(this._activeElement) this._activeElement.focus()
             }
 
+           
 
             document.documentElement.style.overflow = this.opened ? 'hidden' : ''
             this.setAttribute('aria-hidden', !this.opened)
         }
         noBackdropChanged() {
-            const backdrop = this.shadowRoot.querySelector('#backdrop')
-            
             this.noBackdrop 
-                ? this._closeBackdrop(backdrop) 
-                : this._openBackdrop(backdrop)
+                ? this._closeBackdrop() 
+                : this._openBackdrop()
         }
 
     // Lifecycle methods
