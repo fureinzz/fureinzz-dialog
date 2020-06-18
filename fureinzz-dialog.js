@@ -19,10 +19,10 @@ export class DialogElement extends LitElement {
         this.closeOnOutsideClick = false
         this._indexOfTab = -1
         
-        this._captureKey = this._captureKey.bind(this)
-        this._captureClick = this._captureClick.bind(this)
-        this._captureFocus = this._captureFocus.bind(this)
-        this._captureBlur = this._captureBlur.bind(this)
+        this.onKeyDown = this.onKeyDown.bind(this)
+        this.onClick = this.onClick.bind(this)
+        this.onFocus = this.onFocus.bind(this)
+        this.onBlur = this.onBlur.bind(this)
     }
     static get properties() {
         return {
@@ -69,7 +69,6 @@ export class DialogElement extends LitElement {
             _indexOfTab: {type: Number},
         }
     }
-
     open() { 
         this.opened = true 
     }
@@ -84,7 +83,6 @@ export class DialogElement extends LitElement {
         this.close()
         this.dispatchEvent( new CustomEvent('state-changed', {detail: {canceled: true}}))
     }
-
     /** 
      * Focus-trap opens if the `Tab` or `Tab + Shift` key is pressed
      * @protected
@@ -113,7 +111,6 @@ export class DialogElement extends LitElement {
 
         tabbableNodes[this._indexOfTab].element.focus()
     }
-
     /** 
      * Close the dialog when the `Esc` key is pressed
      * @protected 
@@ -126,7 +123,6 @@ export class DialogElement extends LitElement {
             event.stopImmediatePropagation()
         }
     }
-
     /** 
      * If true then dialog have a animation
      * @protected 
@@ -143,11 +139,10 @@ export class DialogElement extends LitElement {
 
         return false
     }
-    _animationEnd() {
+    onAnimationEnd() {
         if(this.opened === false) this.style.display = 'none'
     }
-
-    _captureClick(event) {
+    onClick(event) {
         const {path} = event
 
         // Close overlay when a click occurs outside the dialog 
@@ -157,6 +152,7 @@ export class DialogElement extends LitElement {
             }
         } else {
             for(let i = 0; i < path.length; i++) {
+                // If the element has the `cancel-button` or `confirm-button` attribute then the dialog will be closed
                 if(path[i].hasAttribute('cancel-button') || path[i].hasAttribute('confirm-button')) {
                     path[i].hasAttribute('cancel-button') ? this.cancel() : this.confirm()
                     break;
@@ -165,7 +161,7 @@ export class DialogElement extends LitElement {
         }
         
     }    
-    _captureKey(event) {
+    onKeyDown(event) {
 
         switch (event.code) {
             case "Escape":
@@ -176,47 +172,44 @@ export class DialogElement extends LitElement {
                 break;
         }
     }
-    _captureFocus(event) {
+    onFocus(event) {
         const {target} = event
 
         // tabbableNodes = [{element: HTMLElement, tabindex: Number}, ...] => [element, ...]
         const tabbableNodes = focusManager.getTabbableNodes(this).map(item => item.element)
+        // Set the index for the element that is in focus
         this._indexOfTab = tabbableNodes.indexOf(target)
     }
-    _captureBlur(event) {
+    onBlur(event) {
         const {relatedTarget} = event
 
         // Reset focus if the user clicked outside of the focused element
         if(relatedTarget === null) this._indexOfTab = -1
     }
-
     /** 
      * Show the backdrop
-     * @protected
      **/ 
     openBackdrop() {
         this.$backdrop.removeAttribute('hidden')
     }
-
     /** 
      * Hide the backdrop
-     * @protected 
      **/ 
     closeBackdrop() {
         this.$backdrop.setAttribute('hidden', '')
     }
-
     openedChanged() {
         let hasAnimation = this._checkAnimation()
 
         if(this.opened) {
             // Save the current active element so that we can restore focus when the dialog is closed.
-            // If there is an active element then remove the focus when the dialog opens
             this.$activeElement = document.activeElement == document.body ? null : document.activeElement
+            
+            // If there is an active element then remove the focus when the dialog opens
             if(this.$activeElement) this.$activeElement.blur()            
             
             this.style.display = '' 
-            this.initEventListeners()
+            this.addEventListeners()
 
         } else {
             // If there is an active element, we return the focus to it when the dialog is closed
@@ -232,13 +225,11 @@ export class DialogElement extends LitElement {
         // Set aria attributes
         this.setAttribute('aria-hidden', !this.opened)
     }
-
     noBackdropChanged() {
         this.noBackdrop 
             ? this.closeBackdrop() 
             : this.openBackdrop()
     }
-
     updated(changedProperties) {
         changedProperties.forEach((oldValue, property) => {
             switch (property) {
@@ -254,26 +245,26 @@ export class DialogElement extends LitElement {
     connectedCallback(){
         super.connectedCallback()
         
-        this.addEventListener('animationend', this._animationEnd)
+        this.addEventListener('animationend', this.onAnimationEnd)
     }
     disconnectedCallback() {
         super.disconnectedCallback()
 
         // To remove all event listeners when the component is removed
-            this.removeEventListener('animationend', this._animationEnd)
+            this.removeEventListener('animationend', this.onAnimationEnd)
             this.removeEventListeners()
     }
-    initEventListeners() {
-        this.addEventListener('blur', this._captureBlur, true)
-        this.addEventListener('focus', this._captureFocus, true)
-        this.addEventListener('click', this._captureClick, true)
-        document.addEventListener('keydown', this._captureKey, true)
+    addEventListeners() {
+        this.addEventListener('blur', this.onBlur, true)
+        this.addEventListener('focus', this.onFocus, true)
+        this.addEventListener('click', this.onClick, true)
+        document.addEventListener('keydown', this.onKeyDown, true)
     }
     removeEventListeners() {
-        this.removeEventListener('blur', this._captureBlur, true)
-        this.removeEventListener('focus', this._captureFocus, true)
-        this.removeEventListener('click', this._captureClick, true)
-        document.removeEventListener('keydown', this._captureKey, true)
+        this.removeEventListener('blur', this.onBlur, true)
+        this.removeEventListener('focus', this.onFocus, true)
+        this.removeEventListener('click', this.onClick, true)
+        document.removeEventListener('keydown', this.onKeyDown, true)
     }
 }
 
