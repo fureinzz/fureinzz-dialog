@@ -10,7 +10,7 @@ export class DialogElement extends LitElement {
         this.noBackdrop = false
         this.closeOnEsc = false
         this.closeOnOutsideClick = false
-        this._hasAnimation = null
+        this._activeElement = null
         this._canceled = null
         this._indexOfTab = -1
         
@@ -55,14 +55,14 @@ export class DialogElement extends LitElement {
             * @public
             */ 
             closeOnOutsideClick: {type: Boolean,  attribute: 'close-on-outside-click', reflect: true},
-            
+
             /** 
-            * Does the component have animation or not
-            * @type {?boolean}
+            * The focused element that opened the dialog
+            * @type {?HTMLElement}
             * @private
-            */
-            _hasAnimation: {type: Boolean},
-            
+            */ 
+            _activeElement: {type: HTMLElement},
+
             /** 
             * Reason for closing the dialog
             * @type {?boolean}
@@ -263,15 +263,21 @@ export class DialogElement extends LitElement {
 
     // Observer's of properties 
         openedChanged() {
-            this._hasAnimation = this._checkAnimation()
+            let hasAnimation = this._checkAnimation()
 
             if(this.opened) {
                 this.style.display = ''
                 this.initEventListeners()
+
+                this._activeElement = document.activeElement == document.body ? null : document.activeElement
+                if(this._activeElement) this._activeElement.blur()
             } else {
-                if(!this._hasAnimation) this.style.display = 'none'
+                if(!hasAnimation) this.style.display = 'none'
                 this.removeEventListeners()
+
+                if(this._activeElement) this._activeElement.focus()
             }
+
 
             document.documentElement.style.overflow = this.opened ? 'hidden' : ''
             this.setAttribute('aria-hidden', !this.opened)
