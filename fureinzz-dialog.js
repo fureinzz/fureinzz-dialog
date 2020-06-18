@@ -62,13 +62,6 @@ export class DialogElement extends LitElement {
             closeOnOutsideClick: {type: Boolean,  attribute: 'close-on-outside-click', reflect: true},
 
             /** 
-            * The focused element that opened the dialog
-            * @type {?HTMLElement}
-            * @private
-            */ 
-            _activeElement: {type: HTMLElement},
-
-            /** 
             * Index of the element that is located in the dialog and has `tabindex` > 0 
             * @type {number}
             * @private
