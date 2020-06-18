@@ -189,8 +189,6 @@ export class DialogElement extends LitElement {
         // Reset focus if the user clicked outside of the focused element
         if(relatedTarget === null) this._indexOfTab = -1
     }
-    
-    
 
     /** 
      * Show the backdrop
@@ -201,7 +199,7 @@ export class DialogElement extends LitElement {
     }
 
     /** 
-     * Hide the dackdrop
+     * Hide the backdrop
      * @protected 
      **/ 
     closeBackdrop() {
