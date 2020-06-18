@@ -25,5 +25,8 @@
   "homepage": "https://github.com/fureinzz/fureinzz-dialog#readme",
   "dependencies": {
     "lit-element": "^2.3.1"
+  },
+  "devDependencies": {
+    "wct-browser-legacy": "^1.0.2"
   }
 }
