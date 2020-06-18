@@ -10,14 +10,13 @@ export class DialogElement extends LitElement {
         this.shadowRoot.append(template.content.cloneNode(true))
 
         this.$backdrop = this.shadowRoot.querySelector('#backdrop')
+        this.$scrollableContainer = document.documentElement
 
         this.role = 'dialog'
         this.opened = false
         this.noBackdrop = false
         this.closeOnEsc = false
         this.closeOnOutsideClick = false
-        this._activeElement = null
-        this._canceled = null
         this._indexOfTab = -1
         
         this._captureKey = this._captureKey.bind(this)
@@ -70,13 +69,6 @@ export class DialogElement extends LitElement {
             _activeElement: {type: HTMLElement},
 
             /** 
-            * Reason for closing the dialog
-            * @type {?boolean}
-            * @private
-            */ 
-            _canceled: {type: Boolean},
-            
-            /** 
             * Index of the element that is located in the dialog and has `tabindex` > 0 
             * @type {number}
             * @private
@@ -92,16 +84,12 @@ export class DialogElement extends LitElement {
         this.opened = false
     }
     confirm() {
-        this._canceled = false
         this.close()
-        
-        this.dispatchEvent( new CustomEvent('state-changed', {detail: {canceled: this._canceled}}))
+        this.dispatchEvent( new CustomEvent('state-changed', {detail: {canceled: false}}))
     }
     cancel() {
-        this._canceled = true
         this.close()
-
-        this.dispatchEvent( new CustomEvent('state-changed', {detail: {canceled: this._canceled}}))
+        this.dispatchEvent( new CustomEvent('state-changed', {detail: {canceled: true}}))
     }
 
     /** 
@@ -110,7 +98,7 @@ export class DialogElement extends LitElement {
      * @param   {!Event} event
      * @returns {void}
      **/ 
-    _onTab(event) {
+    onTab(event) {
         event.preventDefault()
         
         const {shiftKey} = event
@@ -137,9 +125,12 @@ export class DialogElement extends LitElement {
      * Close the dialog when the `Esc` key is pressed
      * @protected 
      **/ 
-    _onEsc() {
+    onEsc(event) {
         if(this.closeOnEsc) {
             this.cancel()
+
+            // If there are more dialogs we don't close them
+            event.stopImmediatePropagation()
         }
     }
 
@@ -182,14 +173,13 @@ export class DialogElement extends LitElement {
         
     }    
     _captureKey(event) {
-        const {key} = event
-        
-        switch(key) {
-            case 'Escape':
-                this._onEsc()
+
+        switch (event.code) {
+            case "Escape":
+                this.onEsc(event)
                 break;
-            case 'Tab':
-                this._onTab(event)
+            case "Tab":
+                this.onTab(event)
                 break;
         }
     }
@@ -207,89 +197,93 @@ export class DialogElement extends LitElement {
         if(relatedTarget === null) this._indexOfTab = -1
     }
     
-    // Backdrop
+    
 
-        /** 
-         * Show the backdrop
-         * @protected
-         **/ 
-        _openBackdrop() {
-            this.$backdrop.removeAttribute('hidden')
-        }
+    /** 
+     * Show the backdrop
+     * @protected
+     **/ 
+    openBackdrop() {
+        this.$backdrop.removeAttribute('hidden')
+    }
 
-        /** 
-         * Removing dackdrop
-         * @protected 
-         **/ 
-        _closeBackdrop() {
-            this.$backdrop.setAttribute('hidden', '')
-        }
+    /** 
+     * Hide the dackdrop
+     * @protected 
+     **/ 
+    closeBackdrop() {
+        this.$backdrop.setAttribute('hidden', '')
+    }
 
-    // Observer's of properties 
-        openedChanged() {
-            let hasAnimation = this._checkAnimation()
+    openedChanged() {
+        let hasAnimation = this._checkAnimation()
 
-            if(this.opened) {
-                this.style.display = ''
-                this.initEventListeners()
-
-                this._activeElement = document.activeElement == document.body ? null : document.activeElement
-                if(this._activeElement) this._activeElement.blur()
-            } else {
-                if(!hasAnimation) this.style.display = 'none'
-                this.removeEventListeners()
-
-                if(this._activeElement) this._activeElement.focus()
-            }
-
-           
-
-            document.documentElement.style.overflow = this.opened ? 'hidden' : ''
-            this.setAttribute('aria-hidden', !this.opened)
-        }
-        noBackdropChanged() {
-            this.noBackdrop 
-                ? this._closeBackdrop() 
-                : this._openBackdrop()
-        }
-
-    // Lifecycle methods
-        updated(changedProperties) {
-            changedProperties.forEach((oldValue, property) => {
-                switch (property) {
-                    case 'opened':
-                        this.openedChanged()
-                        break;
-                    case 'noBackdrop':
-                        this.noBackdropChanged()
-                        break;
-                }
-            });
-        }
-        connectedCallback(){
-            super.connectedCallback()
+        if(this.opened) {
+            // Save the current active element so that we can restore focus when the dialog is closed.
+            // If there is an active element then remove the focus when the dialog opens
+            this.$activeElement = document.activeElement == document.body ? null : document.activeElement
+            if(this.$activeElement) this.$activeElement.blur()            
             
-            this.addEventListener('animationend', this._animationEnd)
-        }
-        disconnectedCallback() {
-            super.disconnectedCallback()
+            this.style.display = '' 
+            this.initEventListeners()
 
-            // To remove all event listeners when the component is removed
-                this.removeEventListener('animationend', this._animationEnd)
-                this.removeEventListeners()
+        } else {
+            // If there is an active element, we return the focus to it when the dialog is closed
+            if(this.activeElement) this.activeElement.focus()            
+            
+            if(!hasAnimation) this.style.display = 'none'
+            this.removeEventListeners()
         }
-        initEventListeners() {
-            this.addEventListener('blur', this._captureBlur, true)
-            this.addEventListener('focus', this._captureFocus, true)
-            this.addEventListener('click', this._captureClick, true)
-            document.addEventListener('keydown', this._captureKey, true)
-        }
-        removeEventListeners() {
-            this.removeEventListener('blur', this._captureBlur, true)
-            this.removeEventListener('focus', this._captureFocus, true)
-            this.removeEventListener('click', this._captureClick, true)
-            document.removeEventListener('keydown', this._captureKey, true)
-        }
+
+        // Blocking scrolling in the container in order to avoid scrolling the external content
+        this.$scrollableContainer.style.overflow = this.opened ? 'hidden' : ''
+        
+        // Set aria attributes
+        this.setAttribute('aria-hidden', !this.opened)
+    }
+
+    noBackdropChanged() {
+        this.noBackdrop 
+            ? this.closeBackdrop() 
+            : this.openBackdrop()
+    }
+
+    updated(changedProperties) {
+        changedProperties.forEach((oldValue, property) => {
+            switch (property) {
+                case 'opened':
+                    this.openedChanged()
+                    break;
+                case 'noBackdrop':
+                    this.noBackdropChanged()
+                    break;
+            }
+        });
+    }
+    connectedCallback(){
+        super.connectedCallback()
+        
+        this.addEventListener('animationend', this._animationEnd)
+    }
+    disconnectedCallback() {
+        super.disconnectedCallback()
+
+        // To remove all event listeners when the component is removed
+            this.removeEventListener('animationend', this._animationEnd)
+            this.removeEventListeners()
+    }
+    initEventListeners() {
+        this.addEventListener('blur', this._captureBlur, true)
+        this.addEventListener('focus', this._captureFocus, true)
+        this.addEventListener('click', this._captureClick, true)
+        document.addEventListener('keydown', this._captureKey, true)
+    }
+    removeEventListeners() {
+        this.removeEventListener('blur', this._captureBlur, true)
+        this.removeEventListener('focus', this._captureFocus, true)
+        this.removeEventListener('click', this._captureClick, true)
+        document.removeEventListener('keydown', this._captureKey, true)
+    }
 }
 
 customElements.define('fureinzz-dialog', DialogElement)
