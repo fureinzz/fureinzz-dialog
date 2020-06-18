@@ -124,7 +124,7 @@ export class DialogElement extends LitElement {
         }
     }
     /** 
-     * If true then dialog have a animation
+     * Checks whether the dialog has animation
      * @protected 
      * @returns {boolean}
      **/ 
