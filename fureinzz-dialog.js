@@ -2,7 +2,7 @@ import {LitElement} from 'lit-element'
 import {focusManager} from './src/focus-manager'
 import {template} from './src/template'
 
-export class DialogElement extends LitElement {
+export class fureinzzDialog extends LitElement {
     constructor() {
         super()
         this.role = 'dialog'
@@ -267,4 +267,4 @@ export class DialogElement extends LitElement {
     }
 }
 
-customElements.define('fureinzz-dialog', DialogElement)
+customElements.define('fureinzz-dialog', fureinzzDialog)
