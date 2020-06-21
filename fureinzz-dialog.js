@@ -5,19 +5,18 @@ import {template} from './src/template'
 export class DialogElement extends LitElement {
     constructor() {
         super()
-        
-        // Initializing the component template
-        this.shadowRoot.append(template.content.cloneNode(true))
-
-        this.$backdrop = this.shadowRoot.querySelector('#backdrop')
-        this.$scrollableContainer = document.documentElement
-
         this.role = 'dialog'
         this.opened = false
         this.noBackdrop = false
         this.closeOnEsc = false
         this.closeOnOutsideClick = false
         this._indexOfTab = -1
+        
+        // Initializing the component template
+        this.shadowRoot.append(template.content.cloneNode(true))
+
+        this.$backdrop = this.shadowRoot.querySelector('#backdrop')
+        this.$scrollableContainer = document.documentElement
         
         this.onKeyDown = this.onKeyDown.bind(this)
         this.onClick = this.onClick.bind(this)
