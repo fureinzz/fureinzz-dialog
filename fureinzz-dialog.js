@@ -2,6 +2,8 @@ import {LitElement} from 'lit-element'
 import {focusManager} from './src/focus-manager'
 import {template} from './src/template'
 
+
+
 export class fureinzzDialog extends LitElement {
     constructor() {
         super()
@@ -15,8 +17,8 @@ export class fureinzzDialog extends LitElement {
         // Initializing the component template
         this.shadowRoot.append(template.content.cloneNode(true))
 
-        this.$backdrop = this.shadowRoot.querySelector('#backdrop')
         this.$scrollableContainer = document.documentElement
+        this.$backdrop = this.shadowRoot.querySelector('#backdrop')
         
         this.onKeyDown = this.onKeyDown.bind(this)
         this.onClick = this.onClick.bind(this)
@@ -207,6 +209,7 @@ export class fureinzzDialog extends LitElement {
             // If there is an active element, we return the focus to it when the dialog is closed
             if(this.activeElement) this.activeElement.focus()            
             
+            // If there is no animation in the dialog then hide the component
             if(!hasAnimation) this.style.display = 'none'
             this.removeEventListeners()
         }
