@@ -89,26 +89,30 @@ export class fureinzzDialog extends LitElement {
      * @returns {void}
      **/ 
     onTab(event) {
-        event.preventDefault()
+        // If the backdrop is visible then focus-trap is activated
+        if(!this.noBackdrop) {
+            const {shiftKey} = event
+
+            // Cancel focusing on elements outside the dialog box
+            event.preventDefault()
+            
+            // All elements that have `tabindex` >= 0 and are located inside the dialog
+            //  tabbableNodes = [{element: HTMLElement, tabIndex: Number}, ...]
+            const tabbableNodes = focusManager.getTabbableNodes(this)
         
-        const {shiftKey} = event
-
-        //  All elements that have `tabindex` >= 0
-        //  tabbableNodes = [{element: HTMLElement, tabIndex: Number}, ...]
-        const tabbableNodes = focusManager.getTabbableNodes(this)
-
-        // Tab + Shift
-        if(shiftKey){
-            this._indexOfTab--
-            if(this._indexOfTab < 0) this._indexOfTab = tabbableNodes.length - 1
-        } 
-        // Tab
-        else {
-            this._indexOfTab++
-            if(this._indexOfTab >= tabbableNodes.length) this._indexOfTab = 0
+                // Tab + Shift
+                if(shiftKey){
+                    this._indexOfTab--
+                    if(this._indexOfTab < 0) this._indexOfTab = tabbableNodes.length - 1
+                } 
+                // Tab
+                else {
+                    this._indexOfTab++
+                    if(this._indexOfTab >= tabbableNodes.length) this._indexOfTab = 0
+                }
+    
+            tabbableNodes[this._indexOfTab].element.focus()  
         }
-
-        tabbableNodes[this._indexOfTab].element.focus()
     }
     /** 
      * Close the dialog when the `Esc` key is pressed
@@ -187,6 +191,7 @@ export class fureinzzDialog extends LitElement {
     }
     openedChanged() {
         let hasAnimation = this._checkAnimation()
+        let event = this.opened ? 'open' : 'close'
 
         if(this.opened) {
             // Save the current active element so that we can restore focus when the dialog is closed.
@@ -211,6 +216,9 @@ export class fureinzzDialog extends LitElement {
         
         // Set aria attributes
         this.setAttribute('aria-hidden', !this.opened)
+
+        // Dispatching an event when the state changes
+        this.dispatchEvent(new CustomEvent(event))
     }
     noBackdropChanged() {
         // Hide or Show backdrop
