@@ -185,18 +185,6 @@ export class fureinzzDialog extends LitElement {
         // Reset focus if the user clicked outside of the focused element
         if(relatedTarget === null) this._indexOfTab = -1
     }
-    /** 
-     * Show the backdrop
-     **/ 
-    openBackdrop() {
-        this.$backdrop.removeAttribute('hidden')
-    }
-    /** 
-     * Hide the backdrop
-     **/ 
-    closeBackdrop() {
-        this.$backdrop.setAttribute('hidden', '')
-    }
     openedChanged() {
         let hasAnimation = this._checkAnimation()
 
@@ -225,10 +213,10 @@ export class fureinzzDialog extends LitElement {
         this.setAttribute('aria-hidden', !this.opened)
     }
     noBackdropChanged() {
-        this.noBackdrop 
-            ? this.closeBackdrop() 
-            : this.openBackdrop()
+        // Hide or Show backdrop
+        this.$backdrop.toggleAttribute('hidden', this.noBackdrop)
     }
+    
     updated(changedProperties) {
         changedProperties.forEach((oldValue, property) => {
             switch (property) {
