@@ -2,7 +2,7 @@ import {LitElement} from 'lit-element'
 import {focusManager} from './src/focus-manager'
 import {template} from './src/template'
 
-class fureinzzDialog extends LitElement {
+export class fureinzzDialog extends LitElement {
 
     public opened: boolean = false
     public closeOnOutsideClick: boolean = false
