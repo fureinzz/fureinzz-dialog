@@ -2,29 +2,31 @@ import {LitElement} from 'lit-element'
 import {focusManager} from './src/focus-manager'
 import {template} from './src/template'
 
+class fureinzzDialog extends LitElement {
 
+    public opened: boolean = false
+    public closeOnOutsideClick: boolean = false
+    public closeOnEsc: boolean = false
+    public noBackdrop: boolean = false
 
-export class fureinzzDialog extends LitElement {
-    constructor() {
+    protected indexTab: number = -1
+    protected $backdrop: HTMLElement
+    protected $scrollableContainer: HTMLElement = document.documentElement
+    protected $activeElement: HTMLElement | null = null
+
+    constructor () {
         super()
-        this.role = 'dialog'
-        this.opened = false
-        this.noBackdrop = false
-        this.closeOnEsc = false
-        this.closeOnOutsideClick = false
-        this._indexOfTab = -1
-        
+
         // Initializing the component template
         this.shadowRoot.append(template.content.cloneNode(true))
-
-        this.$scrollableContainer = document.documentElement
         this.$backdrop = this.shadowRoot.querySelector('#backdrop')
-        
+
         this.onKeyDown = this.onKeyDown.bind(this)
         this.onClick = this.onClick.bind(this)
         this.onFocus = this.onFocus.bind(this)
         this.onBlur = this.onBlur.bind(this)
     }
+
     static get properties() {
         return {
             /** 
@@ -67,30 +69,38 @@ export class fureinzzDialog extends LitElement {
             * @type {number}
             * @private
             */ 
-            _indexOfTab: {type: Number},
+            indexTab: {type: Number},
         }
     }
-    open() { 
+
+    open (): void { 
         this.opened = true 
     }
-    close() { 
+    
+    close (): void { 
         this.opened = false
     }
-    confirm() {
+
+    confirm (): void {
         this.close()
-        this.dispatchEvent( new CustomEvent('state-changed', {detail: {canceled: false}}))
+
+        // Dispatching an event for the external environment
+        // The result of user selection is added to the event's `detail` property
+        this.dispatchEvent(new CustomEvent('state-changed', {detail: {canceled: false}}))
     }
-    cancel() {
+
+    cancel (): void {
         this.close()
-        this.dispatchEvent( new CustomEvent('state-changed', {detail: {canceled: true}}))
+
+        // Dispatching an event for the external environment
+        // The result of user selection is added to the event's `detail` property
+        this.dispatchEvent(new CustomEvent('state-changed', {detail: {canceled: true}}))
     }
+
     /** 
      * Focus-trap opens if the `Tab` or `Tab + Shift` key is pressed
-     * @protected
-     * @param   {!Event} event
-     * @returns {void}
      **/ 
-    onTab(event) {
+    onTab (event: KeyboardEvent): void {
         // If the backdrop is visible then focus-trap is activated
         if(!this.noBackdrop) {
             const {shiftKey} = event
@@ -99,28 +109,28 @@ export class fureinzzDialog extends LitElement {
             event.preventDefault()
             
             // All elements that have `tabindex` >= 0 and are located inside the dialog
-            //  tabbableNodes = [{element: HTMLElement, tabIndex: Number}, ...]
+            // tabbableNodes = [{element: HTMLElement, tabIndex: Number}, ...]
             const tabbableNodes = focusManager.getTabbableNodes(this)
         
                 // Tab + Shift
                 if(shiftKey){
-                    this._indexOfTab--
-                    if(this._indexOfTab < 0) this._indexOfTab = tabbableNodes.length - 1
+                    this.indexTab--
+                    if(this.indexTab < 0) this.indexTab = tabbableNodes.length - 1
                 } 
                 // Tab
                 else {
-                    this._indexOfTab++
-                    if(this._indexOfTab >= tabbableNodes.length) this._indexOfTab = 0
+                    this.indexTab++
+                    if(this.indexTab >= tabbableNodes.length) this.indexTab = 0
                 }
     
-            tabbableNodes[this._indexOfTab].element.focus()  
+            tabbableNodes[this.indexTab].element.focus()  
         }
     }
+
     /** 
      * Close the dialog when the `Esc` key is pressed
-     * @protected 
      **/ 
-    onEsc(event) {
+    onEsc (event: KeyboardEvent): void {
         if(this.closeOnEsc) {
             this.cancel()
 
@@ -128,12 +138,12 @@ export class fureinzzDialog extends LitElement {
             event.stopImmediatePropagation()
         }
     }
+
     /** 
      * Checks whether the dialog has animation
-     * @protected 
      * @returns {boolean}
      **/ 
-    _checkAnimation() {
+    hasAnimation (): Boolean {
         const {animationDuration} = this.style
         
         if(animationDuration == '') {
@@ -144,10 +154,8 @@ export class fureinzzDialog extends LitElement {
 
         return false
     }
-    onAnimationEnd() {
-        if(this.opened === false) this.style.display = 'none'
-    }
-    onClick(event) {
+
+    onClick (event: any): void {
         const {path} = event
 
         // Close overlay when a click occurs outside the dialog 
@@ -164,40 +172,31 @@ export class fureinzzDialog extends LitElement {
                 } else if(path[i].getAttribute('id') === 'dialog') break;
             }
         }
-        
     }    
-    onKeyDown(event) {
 
-        switch (event.code) {
-            case "Escape":
-                this.onEsc(event)
-                break;
-            case "Tab":
-                this.onTab(event)
-                break;
-        }
-    }
-    onFocus(event) {
+    onFocus (event: FocusEvent): void {
         const {target} = event
 
         // tabbableNodes = [{element: HTMLElement, tabindex: Number}, ...] => [element, ...]
         const tabbableNodes = focusManager.getTabbableNodes(this).map(item => item.element)
         // Set the index for the element that is in focus
-        this._indexOfTab = tabbableNodes.indexOf(target)
+        this.indexTab = tabbableNodes.indexOf(target)
     }
-    onBlur(event) {
+
+    onBlur (event: FocusEvent): void {
         const {relatedTarget} = event
 
         // Reset focus if the user clicked outside of the focused element
-        if(relatedTarget === null) this._indexOfTab = -1
+        if(relatedTarget === null) this.indexTab = -1
     }
-    openedChanged() {
-        let hasAnimation = this._checkAnimation()
+
+    openedChanged (): void {
+        let hasAnimation = this.hasAnimation()
         let event = this.opened ? 'open' : 'close'
 
         if(this.opened) {
             // Save the current active element so that we can restore focus when the dialog is closed.
-            this.$activeElement = document.activeElement == document.body ? null : document.activeElement
+            this.$activeElement = document.activeElement == document.body ? null : document.activeElement as HTMLElement
             
             // If there is an active element then remove the focus when the dialog opens
             if(this.$activeElement) this.$activeElement.blur()            
@@ -207,7 +206,7 @@ export class fureinzzDialog extends LitElement {
 
         } else {
             // If there is an active element, we return the focus to it when the dialog is closed
-            if(this.activeElement) this.activeElement.focus()            
+            if(this.$activeElement) this.$activeElement.focus()            
             
             // If there is no animation in the dialog then hide the component
             if(!hasAnimation) this.style.display = 'none'
@@ -218,18 +217,31 @@ export class fureinzzDialog extends LitElement {
         this.$scrollableContainer.style.overflow = this.opened ? 'hidden' : ''
         
         // Set aria attributes
-        this.setAttribute('aria-hidden', !this.opened)
+        this.setAttribute('aria-hidden', String(!this.opened))
 
         // Dispatching an event when the state changes
         this.dispatchEvent(new CustomEvent(event))
     }
-    noBackdropChanged() {
+
+    noBackdropChanged (): void {
         // Hide or Show backdrop
         this.$backdrop.toggleAttribute('hidden', this.noBackdrop)
     }
-    
-    updated(changedProperties) {
-        changedProperties.forEach((oldValue, property) => {
+
+    onKeyDown (event: KeyboardEvent): void {
+
+        switch (event.code) {
+            case "Escape":
+                this.onEsc(event)
+                break;
+            case "Tab":
+                this.onTab(event)
+                break;
+        }
+    }
+
+    updated (changedProperties: any): void {
+        changedProperties.forEach((oldValue: unknown, property: string) => {
             switch (property) {
                 case 'opened':
                     this.openedChanged()
@@ -240,25 +252,33 @@ export class fureinzzDialog extends LitElement {
             }
         });
     }
-    connectedCallback(){
+    
+    onAnimationEnd (): void {
+        // If the element has animation and it closes then remove it from view
+        if(this.opened === false) this.style.display = 'none'
+    }
+
+    connectedCallback (): void {
         super.connectedCallback()
-        
         this.addEventListener('animationend', this.onAnimationEnd)
     }
-    disconnectedCallback() {
+
+    disconnectedCallback (): void {
         super.disconnectedCallback()
 
         // To remove all event listeners when the component is removed
             this.removeEventListener('animationend', this.onAnimationEnd)
             this.removeEventListeners()
     }
-    addEventListeners() {
+
+    addEventListeners (): void {
         this.addEventListener('blur', this.onBlur, true)
         this.addEventListener('focus', this.onFocus, true)
         this.addEventListener('click', this.onClick, true)
         document.addEventListener('keydown', this.onKeyDown, true)
     }
-    removeEventListeners() {
+    
+    removeEventListeners (): void {
         this.removeEventListener('blur', this.onBlur, true)
         this.removeEventListener('focus', this.onFocus, true)
         this.removeEventListener('click', this.onClick, true)
