@@ -181,7 +181,7 @@ export class fureinzzDialog extends LitElement {
         // tabbableNodes = [{element: HTMLElement, tabindex: Number}, ...] => [element, ...]
         const tabbableNodes = focusManager.getTabbableNodes(this).map(item => item.element)
         // Set the index for the element that is in focus
-        this.indexTab = tabbableNodes.indexOf(target)
+        this.indexTab = tabbableNodes.indexOf(target as HTMLElement)
     }
 
     onBlur (event: FocusEvent): void {
