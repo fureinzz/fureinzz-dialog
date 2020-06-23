@@ -4,6 +4,7 @@ import {template} from './src/template'
 
 export class fureinzzDialog extends LitElement {
 
+    public role: string = 'dialog'
     public opened: boolean = false
     public closeOnOutsideClick: boolean = false
     public closeOnEsc: boolean = false
