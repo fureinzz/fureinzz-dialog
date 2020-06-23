@@ -1,6 +1,11 @@
-const node = Element.prototype;
-const matchesSelector = node.matches || node.oMatchesSelector || node.mozMatchesSelector ||
-node.msMatchesSelector || node.webkitMatchesSelector || node.matchesSelector
+const matchesSelector = Element.prototype.matches 
+
+interface tabbableNodes {
+    element: HTMLElement,
+    tabIndex: number
+}
+
+type tabbableNode = Array<tabbableNodes>
 
 class nodeFocusManager {
     /**
@@ -8,7 +13,7 @@ class nodeFocusManager {
      * @type {Array}
      * @private
      **/ 
-    _result = []
+    protected nodes: tabbableNode = []
 
 
     /** 
@@ -16,7 +21,7 @@ class nodeFocusManager {
      * @param {!HTMLElement} element 
      * @returns {Boolean}
      **/ 
-    isVisible(element) {
+    isVisible (element: HTMLElement): boolean {
         const {display, visibility} = element.style
         
         if(display !== 'none' && visibility !== 'hidden') {
@@ -32,9 +37,9 @@ class nodeFocusManager {
      * @param {!HTMLElement} element
      * @returns {Boolean}
      * */ 
-    isFocusable(element) {
-        const focusableElements = matchesSelector.call(element, 'button, textarea, input, select, object')
-        const tabIndex = element.tabIndex >= 0
+    isFocusable (element: HTMLElement): boolean {
+        const focusableElements: boolean = matchesSelector.call(element, 'button, textarea, input, select, object')
+        const tabIndex: boolean = element.tabIndex >= 0
 
         
         return focusableElements || tabIndex
@@ -47,7 +52,7 @@ class nodeFocusManager {
      * @param {!HTMLElement} element
      * @returns {Boolean}
      * */ 
-    isTabbable(element) {
+    isTabbable (element: HTMLElement): boolean {
         return this.isFocusable(element) && this.isVisible(element)
     }    
 
@@ -56,11 +61,11 @@ class nodeFocusManager {
      * @param {!HTMLElement} element
      * @returns {Array} 
      * */ 
-    getTabbableNodes(element) {
-        this._result = []
+    getTabbableNodes (element: HTMLElement): tabbableNode {
+        this.nodes = []
         this.collectNodes(element)
 
-        return this._result
+        return this.nodes
     }
 
     /** 
@@ -68,19 +73,19 @@ class nodeFocusManager {
      * @param {!HTMLElement} element
      * @returns {void}
      * */ 
-    collectNodes(element) {
+    collectNodes (element: HTMLElement): void {
         // Returns false if the element is not visible or the Element is not ELEMENT_NODE
-        if(!this.isVisible(element) || element.nodeType !== Node.ELEMENT_NODE) return false
-        
-        if(this.isTabbable(element)) {
-            this.pushNode(element)
-        }
-
-        const children = element.children
-        if(children.length) {
-            for(let i = 0; i < children.length; i++) {
-                this.collectNodes(children[i])
+        if(this.isVisible(element) || element.nodeType == Node.ELEMENT_NODE) {
+            if(this.isTabbable(element)) {
+                this.pushNode(element)
             }
+
+            const children = element.children
+            if(children.length) {
+                for(let i = 0; i < children.length; i++) {
+                    this.collectNodes(children[i] as HTMLElement)
+                }
+            }            
         }
     }
 
@@ -89,11 +94,11 @@ class nodeFocusManager {
      * @param {!HTMLElement} element
      * @returns {void}
      * */ 
-    pushNode(element) {
+    pushNode (element: HTMLElement) {
         const tabIndex = element.tabIndex
 
         const {left, right} = this.sortNodes(tabIndex)
-        this._result = [...left, {element, tabIndex}, ...right]
+        this.nodes = [...left, {element, tabIndex}, ...right]
     }
 
     /** 
@@ -102,32 +107,32 @@ class nodeFocusManager {
      * @param {?Number} firstValueOfArray
      * @returns {Object}
      * */ 
-    sortNodes(value, firstValueOfArray = this._result.length ? this._result[0].tabIndex : null) {
-        let left = [], right = [] 
+    sortNodes (value: number, firstValueOfArray: number | null = this.nodes.length ? this.nodes[0].tabIndex : null): {left: tabbableNode, right: tabbableNode} {
+        let left: tabbableNode = [], right: tabbableNode = [] 
 
         // if `firstValueOfArray` === null, the new element is the first in the array
         if(firstValueOfArray === null) return {left, right}
         if(value <= firstValueOfArray) {
             const indexOfnewFirstValue = this.lastIndex(firstValueOfArray) + 1
             
-            return indexOfnewFirstValue > this._result.length - 1
-                ? {left: this._result, right}
-                : this.sortNodes(value, this._result[indexOfnewFirstValue].tabIndex)
+            return indexOfnewFirstValue > this.nodes.length - 1
+                ? {left: this.nodes, right}
+                : this.sortNodes(value, this.nodes[indexOfnewFirstValue].tabIndex)
         } else {
             const indexOfFirstValue = this.firstIndex(firstValueOfArray)
 
-            left  = this._result.slice(0, indexOfFirstValue)
-            right = this._result.slice(indexOfFirstValue)
+            left  = this.nodes.slice(0, indexOfFirstValue)
+            right = this.nodes.slice(indexOfFirstValue)
 
             return {left, right}
         }
     }
 
-    lastIndex(value) {
-        return this._result.map(item => item.tabIndex).lastIndexOf(value)
+    lastIndex (value: number): number {
+        return this.nodes.map(item => item.tabIndex).lastIndexOf(value)
     }
-    firstIndex(value) {
-        return this._result.map(item => item.tabIndex).indexOf(value)
+    firstIndex (value: number): number {
+        return this.nodes.map(item => item.tabIndex).indexOf(value)
     }
 }
 
