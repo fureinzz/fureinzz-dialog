@@ -6,8 +6,8 @@ export class fureinzzDialog extends LitElement {
 
     public role: string = 'dialog'
     public opened: boolean = false
-    public closeOnOutsideClick: boolean = false
-    public closeOnEsc: boolean = false
+    public noCloseOnOutsideClick: boolean = false
+    public noCloseOnEsc: boolean = false
     public noBackdrop: boolean = false
 
     protected indexTab: number = -1
@@ -52,18 +52,18 @@ export class fureinzzDialog extends LitElement {
             noBackdrop: {type: Boolean,  attribute: 'no-backdrop', reflect: true},
             
             /** 
-            * If true the dialog will be closed when you press `Esc`
+            * If false the dialog will be closed when you press `Esc`
             * @type {!boolean}
             * @public
             */ 
-            closeOnEsc: {type: Boolean,  attribute: 'close-on-esc', reflect: true},
+            noCloseOnEsc: {type: Boolean,  attribute: 'close-on-esc', reflect: true},
             
             /** 
-            * If true the dialog will be closed when you click outside the element
+            * If false the dialog will be closed when you click outside the element
             * @type {!boolean}
             * @public
             */ 
-            closeOnOutsideClick: {type: Boolean,  attribute: 'close-on-outside-click', reflect: true},
+            noCloseOnOutsideClick: {type: Boolean,  attribute: 'close-on-outside-click', reflect: true},
 
             /** 
             * Index of the element that is located in the dialog and has `tabindex` > 0 
@@ -132,7 +132,7 @@ export class fureinzzDialog extends LitElement {
      * Close the dialog when the `Esc` key is pressed
      **/ 
     onEsc (event: KeyboardEvent): void {
-        if(this.closeOnEsc) {
+        if(!this.noCloseOnEsc) {
             this.cancel()
 
             // If there are more dialogs we don't close them
@@ -161,7 +161,7 @@ export class fureinzzDialog extends LitElement {
 
         // Close overlay when a click occurs outside the dialog 
         if(path[0].getAttribute('id') === 'backdrop' || path[0] === this) {
-            if(this.closeOnOutsideClick) {
+            if(!this.noCloseOnOutsideClick) {
                 this.cancel()
             }
         } else {
