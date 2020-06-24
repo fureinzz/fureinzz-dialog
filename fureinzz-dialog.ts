@@ -2,6 +2,15 @@ import {LitElement} from 'lit-element'
 import {focusManager} from './src/focus-manager'
 import {template} from './src/template'
 
+/** 
+ *  The component uses modern ShadowDOM technology to improve the user experience
+ *  
+ *  When the dialog  opens, the focus falls inside the component, and external 
+ *  content is blocked from scrolling. When the dialog  closes, focus is restored. 
+ *  The component uses modern ShadowDOM technology to improve the user experience
+ *  
+ *  @author fureinzz
+ **/ 
 export class fureinzzDialog extends LitElement {
 
     public role: string = 'dialog'
