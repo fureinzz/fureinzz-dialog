@@ -7,7 +7,6 @@ import {template} from './src/template'
  *  
  *  When the dialog  opens, the focus falls inside the component, and external 
  *  content is blocked from scrolling. When the dialog  closes, focus is restored. 
- *  The component uses modern ShadowDOM technology to improve the user experience
  *  
  *  @author fureinzz
  **/ 
@@ -65,14 +64,14 @@ export class fureinzzDialog extends LitElement {
             * @type {!boolean}
             * @public
             */ 
-            noCloseOnEsc: {type: Boolean,  attribute: 'close-on-esc', reflect: true},
+            noCloseOnEsc: {type: Boolean,  attribute: 'no-close-on-esc', reflect: true},
             
             /** 
             * If false the dialog will be closed when you click outside the element
             * @type {!boolean}
             * @public
             */ 
-            noCloseOnOutsideClick: {type: Boolean,  attribute: 'close-on-outside-click', reflect: true},
+            noCloseOnOutsideClick: {type: Boolean,  attribute: 'no-close-on-outside-click', reflect: true},
 
             /** 
             * Index of the element that is located in the dialog and has `tabindex` > 0 
