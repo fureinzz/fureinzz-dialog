@@ -152,7 +152,7 @@ export class fureinzzDialog extends LitElement {
      * Checks whether the dialog has animation
      * @returns {boolean}
      **/ 
-    hasAnimation (): Boolean {
+    hasAnimation (): boolean {
         const {animationDuration} = this.style
         
         if(animationDuration == '') {
@@ -272,7 +272,7 @@ export class fureinzzDialog extends LitElement {
 
         // instant closing of the dialog without animation when the page is reloaded
         this.style.display = 'none'
-        
+
         this.addEventListener('animationend', this.onAnimationEnd)
     }
 
