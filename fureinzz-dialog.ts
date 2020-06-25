@@ -269,6 +269,10 @@ export class fureinzzDialog extends LitElement {
 
     connectedCallback (): void {
         super.connectedCallback()
+
+        // instant closing of the dialog without animation when the page is reloaded
+        this.style.display = 'none'
+        
         this.addEventListener('animationend', this.onAnimationEnd)
     }
 
