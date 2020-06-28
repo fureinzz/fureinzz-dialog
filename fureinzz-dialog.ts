@@ -134,7 +134,10 @@ export class fureinzzDialog extends LitElement {
                     if(this.indexTab >= tabbableNodes.length) this.indexTab = 0
                 }
     
-            tabbableNodes[this.indexTab].element.focus()  
+            if (tabbableNodes[this.indexTab]) {
+                tabbableNodes[this.indexTab].element.focus()
+            }
+                  
         }
     }
 
