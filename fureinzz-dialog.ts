@@ -36,7 +36,7 @@ export class fureinzzDialog extends LitElement {
         this.onBlur = this.onBlur.bind(this)
     }
 
-    static get properties() {
+    static get properties () {
         return {
             /** 
             * The `dialog` role is used to mark up an HTML based application dialog or window that separates content or UI from the rest of the web application or page.
