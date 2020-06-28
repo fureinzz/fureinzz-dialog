@@ -82,10 +82,12 @@ export class fureinzzDialog extends LitElement {
         }
     }
 
+    /** Open the dialog */ 
     open (): void { 
         this.opened = true 
     }
     
+    /** Close the dialog */ 
     close (): void { 
         this.opened = false
     }
