@@ -1,6 +1,6 @@
 {
   "name": "@fureinzz/fureinzz-dialog",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Web component that creates a dialog box",
   "main": "fureinzz-dialog.js",
   "repository": {
