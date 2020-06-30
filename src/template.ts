@@ -17,12 +17,12 @@ template.innerHTML =   `
             background: var(--dialog-background, #fff);
             padding: var(--dialog-padding, 12px);
             margin: var(--dialog-margin, 0);
-            width: var(--dialog-width, 520px);
+            width: var(--dialog-width, auto);
             height: var(--dialog-height, auto);
-            box-shadow: var(--dialog-boxShadow);
-            border-radius: var(--dialog-borderRadius, 5px);
-            max-height: var(--dialog-maxHeight);
-            max-width: var(--dialog-maxWidth);
+            box-shadow: var(--dialog-box-shadow);
+            border-radius: var(--dialog-border-radius, 5px);
+            max-height: var(--dialog-max-height, auto);
+            max-width: var(--dialog-max-width, 520px);
         }
         #backdrop {
             position: fixed;
