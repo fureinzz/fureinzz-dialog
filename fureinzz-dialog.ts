@@ -113,7 +113,7 @@ export class fureinzzDialog extends LitElement {
      **/ 
     onTab (event: KeyboardEvent): void {
         // If the backdrop is visible then focus-trap is activated
-        if(!this.noBackdrop) {
+        if (!this.noBackdrop) {
             const {shiftKey} = event
 
             // Cancel focusing on elements outside the dialog box
@@ -124,14 +124,18 @@ export class fureinzzDialog extends LitElement {
             const tabbableNodes = focusManager.getTabbableNodes(this)
         
                 // Tab + Shift
-                if(shiftKey){
+                if (shiftKey){
                     this.indexTab--
-                    if(this.indexTab < 0) this.indexTab = tabbableNodes.length - 1
+                    if (this.indexTab < 0) {
+                        this.indexTab = tabbableNodes.length - 1
+                    }
                 } 
                 // Tab
                 else {
                     this.indexTab++
-                    if(this.indexTab >= tabbableNodes.length) this.indexTab = 0
+                    if (this.indexTab >= tabbableNodes.length) {
+                        this.indexTab = 0
+                    }
                 }
     
             if (tabbableNodes[this.indexTab]) {
@@ -145,7 +149,7 @@ export class fureinzzDialog extends LitElement {
      * Close the dialog when the `Esc` key is pressed
      **/ 
     onEsc (event: KeyboardEvent): void {
-        if(!this.noCloseOnEsc) {
+        if (!this.noCloseOnEsc) {
             this.cancel()
 
             // If there are more dialogs we don't close them
@@ -160,10 +164,10 @@ export class fureinzzDialog extends LitElement {
     hasAnimation (): boolean {
         const {animationDuration} = this.style
         
-        if(animationDuration == '') {
+        if (animationDuration == '') {
             const {animationDuration} = getComputedStyle(this)
             
-            if(animationDuration !== '0s') return true
+            if (animationDuration !== '0s') return true
         }
 
         return false
@@ -173,8 +177,8 @@ export class fureinzzDialog extends LitElement {
         const {path} = event
 
         // Close overlay when a click occurs outside the dialog 
-        if(path[0].getAttribute('id') === 'backdrop' || path[0] === this) {
-            if(!this.noCloseOnOutsideClick) {
+        if (path[0].getAttribute('id') === 'backdrop' || path[0] === this) {
+            if (!this.noCloseOnOutsideClick) {
                 this.cancel()
             }
         } else {
@@ -201,14 +205,14 @@ export class fureinzzDialog extends LitElement {
         const {relatedTarget} = event
 
         // Reset focus if the user clicked outside of the focused element
-        if(relatedTarget === null) this.indexTab = -1
+        if (relatedTarget === null) this.indexTab = -1
     }
 
     openedChanged (): void {
         let hasAnimation = this.hasAnimation()
         let event = this.opened ? 'open' : 'close'
 
-        if(this.opened) {
+        if (this.opened) {
             // Save the current active element so that we can restore focus when the dialog is closed.
             this.$activeElement = document.activeElement == document.body ? null : document.activeElement as HTMLElement
             
