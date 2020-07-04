@@ -3,10 +3,8 @@ import {focusManager} from './src/focus-manager'
 import {template} from './src/template'
 
 /** 
- *  The component uses modern ShadowDOM technology to improve the user experience
- *  
- *  When the dialog  opens, the focus falls inside the component, and external 
- *  content is blocked from scrolling. When the dialog  closes, focus is restored. 
+ *  `fureinzz-dialog` is an easily customizable and accessible component that adds a UI dialog element.  
+ *  The component uses modern shadow-dom technology that allows you to encapsulate styles from the external environment and improves the user experience. 
  *  
  *  @author fureinzz
  **/ 
