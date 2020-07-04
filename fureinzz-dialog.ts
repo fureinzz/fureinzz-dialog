@@ -159,7 +159,6 @@ export class fureinzzDialog extends LitElement {
 
     /** 
      * Checks whether the dialog has animation
-     * @returns {boolean}
      **/ 
     hasAnimation (): boolean {
         const {animationDuration} = this.style
@@ -247,7 +246,6 @@ export class fureinzzDialog extends LitElement {
     }
 
     onKeyDown (event: KeyboardEvent): void {
-
         switch (event.code) {
             case "Escape":
                 this.onEsc(event)
@@ -289,10 +287,11 @@ export class fureinzzDialog extends LitElement {
         super.disconnectedCallback()
 
         // To remove all event listeners when the component is removed
-            this.removeEventListener('animationend', this.onAnimationEnd)
-            this.removeEventListeners()
+        this.removeEventListener('animationend', this.onAnimationEnd)
+        this.removeEventListeners()
     }
 
+    /** Adds the necessary event listeners for the element */ 
     addEventListeners (): void {
         this.addEventListener('blur', this.onBlur, true)
         this.addEventListener('focus', this.onFocus, true)
@@ -300,6 +299,9 @@ export class fureinzzDialog extends LitElement {
         document.addEventListener('keydown', this.onKeyDown, true)
     }
     
+    /** Deletes all event listeners. 
+     *  Used to prevent possible memory leaks 
+     **/ 
     removeEventListeners (): void {
         this.removeEventListener('blur', this.onBlur, true)
         this.removeEventListener('focus', this.onFocus, true)
