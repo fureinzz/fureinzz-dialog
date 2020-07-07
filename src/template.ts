@@ -13,16 +13,23 @@ template.innerHTML =   `
             position: relative; 
             z-index: 1000;
 
-            animation: var(--dialog-animation);
             background: var(--dialog-background, #fff);
             padding: var(--dialog-padding, 12px);
+            padding-top: var(--dialog-padding-top, 0);
+            padding-bottom: var(--dialog-padding-bottom, 0);
+            padding-left: var(--dialog-padding-left, 0);
+            padding-right: var(--dialog-padding-right, 0);
             margin: var(--dialog-margin, 0);
+            margin-top: var(--dialog-margin-top, 0);
+            margin-bottom: var(--dialog-margin-bottom, 0);
+            margin-left: var(--dialog-margin-left, 0);
+            margin-right: var(--dialog-margin-right, 0);
             width: var(--dialog-width, auto);
             height: var(--dialog-height, auto);
-            box-shadow: var(--dialog-box-shadow);
-            border-radius: var(--dialog-border-radius, 5px);
             max-height: var(--dialog-max-height, auto);
             max-width: var(--dialog-max-width, 520px);
+            box-shadow: var(--dialog-box-shadow);
+            border-radius: var(--dialog-border-radius, 5px);
         }
         #backdrop {
             position: fixed;
