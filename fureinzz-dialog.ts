@@ -25,8 +25,8 @@ export class fureinzzDialog extends LitElement {
         super()
 
         // Initializing the component template
-        this.shadowRoot.append(template.content.cloneNode(true))
-        this.$backdrop = this.shadowRoot.querySelector('#backdrop')
+        this.shadowRoot!.append(template.content.cloneNode(true))
+        this.$backdrop = this.shadowRoot!.querySelector('#backdrop') as HTMLElement
 
         this.onKeyDown = this.onKeyDown.bind(this)
         this.onClick = this.onClick.bind(this)
