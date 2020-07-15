@@ -16,7 +16,7 @@ export class fureinzzDialog extends LitElement {
     public noCloseOnEsc: boolean = false
     public noBackdrop: boolean = false
 
-    protected indexTab: number = -1
+    protected indexTab: number = 0
     protected $backdrop: HTMLElement
     protected $scrollableContainer: HTMLElement = document.documentElement
     protected $activeElement: HTMLElement | null = null
@@ -120,26 +120,22 @@ export class fureinzzDialog extends LitElement {
             // All elements that have `tabindex` >= 0 and are located inside the dialog
             // tabbableNodes = [{element: HTMLElement, tabIndex: Number}, ...]
             const tabbableNodes = focusManager.getTabbableNodes(this)
-        
-                // Tab + Shift
-                if (shiftKey){
-                    this.indexTab--
-                    if (this.indexTab < 0) {
-                        this.indexTab = tabbableNodes.length - 1
-                    }
-                } 
-                // Tab
-                else {
-                    this.indexTab++
-                    if (this.indexTab >= tabbableNodes.length) {
-                        this.indexTab = 0
-                    }
-                }
-    
-            if (tabbableNodes[this.indexTab]) {
-                tabbableNodes[this.indexTab].element.focus()
+            
+            // If true, the Shift + Tab combination is pressed, otherwise Tab
+            shiftKey ? this.indexTab-- : this.indexTab++
+            
+            if (this.indexTab - tabbableNodes.length > 1) {
+                this.indexTab = 1
             }
-                  
+            if (this.indexTab < 0) {
+                this.indexTab = tabbableNodes.length
+            }
+
+            if (tabbableNodes[this.indexTab - 1]) {
+                tabbableNodes[this.indexTab - 1].element.focus()
+            } else {
+                document.activeElement.blur()
+            }
         }
     }
 
@@ -195,14 +191,16 @@ export class fureinzzDialog extends LitElement {
         // tabbableNodes = [{element: HTMLElement, tabindex: Number}, ...] => [element, ...]
         const tabbableNodes = focusManager.getTabbableNodes(this).map(item => item.element)
         // Set the index for the element that is in focus
-        this.indexTab = tabbableNodes.indexOf(target as HTMLElement)
+        this.indexTab = tabbableNodes.indexOf(target as HTMLElement) + 1
     }
 
     onBlur (event: FocusEvent): void {
         const {relatedTarget} = event
 
         // Reset focus if the user clicked outside of the focused element
-        if (relatedTarget === null) this.indexTab = -1
+        if (relatedTarget === null) {
+            this.indexTab = 0
+        }
     }
 
     openedChanged (): void {
