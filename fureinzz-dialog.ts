@@ -10,7 +10,8 @@ import {template} from './src/template'
  **/ 
 export class fureinzzDialog extends LitElement {
 
-    public role: string = 'dialog'
+    public ariaRole: string = 'dialog'
+    public ariaModal: string = 'true'
     public opened: boolean = false
     public noCloseOnOutsideClick: boolean = false
     public noCloseOnEsc: boolean = false
@@ -41,7 +42,14 @@ export class fureinzzDialog extends LitElement {
             * @type {!string}
             * @public 
             */ 
-            role: {type: String, reflect: true},
+            ariaRole: {type: String, attribute: 'role', reflect: true},
+
+            /** 
+            * aria-modal is meant to indicate to screen readers that only content contained within a dialog with aria-modal="true" should be accessible to the user.
+            * @type {!string}
+            * @public 
+            */ 
+            ariaModal: {type: String, attribute: 'aria-modal', reflect: true},
 
             /** 
             * Set opened to true to show the dialog component and to false to hide it.
