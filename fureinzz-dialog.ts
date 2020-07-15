@@ -121,13 +121,13 @@ export class fureinzzDialog extends LitElement {
             // tabbableNodes = [{element: HTMLElement, tabIndex: Number}, ...]
             const tabbableNodes = focusManager.getTabbableNodes(this)
             
-            // If true, the Shift + Tab combination is pressed, otherwise Tab
+            // If true, the `Shift + Tab` combination is pressed, otherwise `Tab`
             shiftKey ? this.indexTab-- : this.indexTab++
             
+
             if (this.indexTab - tabbableNodes.length > 1) {
                 this.indexTab = 1
-            }
-            if (this.indexTab < 0) {
+            } else if (this.indexTab < 0) {
                 this.indexTab = tabbableNodes.length
             }
 
