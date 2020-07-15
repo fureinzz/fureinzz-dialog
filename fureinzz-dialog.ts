@@ -114,6 +114,26 @@ export class fureinzzDialog extends LitElement {
         this.dispatchEvent(new CustomEvent('state-changed', {detail: {canceled: true}}))
     }
 
+    
+    assertClosing (): boolean {
+        return this.dispatchEvent(new CustomEvent('close', {cancelable: true}))
+    }
+
+    /** 
+     * Checks whether the dialog has animation
+     **/ 
+    hasAnimation (): boolean {
+        const {animationDuration} = this.style
+        
+        if (animationDuration == '') {
+            const {animationDuration} = getComputedStyle(this)
+            
+            if (animationDuration !== '0s') return true
+        }
+
+        return false
+    }
+
     /** 
      * Focus-trap opens if the `Tab` or `Tab + Shift` key is pressed
      **/ 
@@ -151,27 +171,12 @@ export class fureinzzDialog extends LitElement {
      * Close the dialog when the `Esc` key is pressed
      **/ 
     onEsc (event: KeyboardEvent): void {
-        if (!this.noCloseOnEsc) {
-            this.cancel()
+        if (!this.noCloseOnEsc && this.assertClosing()) {
+            this.close()
 
             // If there are more dialogs we don't close them
             event.stopImmediatePropagation()
         }
-    }
-
-    /** 
-     * Checks whether the dialog has animation
-     **/ 
-    hasAnimation (): boolean {
-        const {animationDuration} = this.style
-        
-        if (animationDuration == '') {
-            const {animationDuration} = getComputedStyle(this)
-            
-            if (animationDuration !== '0s') return true
-        }
-
-        return false
     }
 
     onClick (event: any): void {
@@ -179,8 +184,8 @@ export class fureinzzDialog extends LitElement {
 
         // Close overlay when a click occurs outside the dialog 
         if (path[0].getAttribute('id') === 'backdrop' || path[0] === this) {
-            if (!this.noCloseOnOutsideClick) {
-                this.cancel()
+            if (!this.noCloseOnOutsideClick && this.assertClosing()) {
+                this.close()
             }
         } else {
             for(let i = 0; i < path.length; i++) {
@@ -211,9 +216,13 @@ export class fureinzzDialog extends LitElement {
         }
     }
 
+    onAnimationEnd (): void {
+        // If the element has animation and it closes then remove it from view
+        if(this.opened === false) this.style.display = 'none'
+    }
+
     openedChanged (): void {
         let hasAnimation = this.hasAnimation()
-        let event = this.opened ? 'open' : 'close'
 
         if (this.opened) {
             // Save the current active element so that we can restore focus when the dialog is closed.
@@ -225,6 +234,8 @@ export class fureinzzDialog extends LitElement {
             this.style.display = '' 
             this.addEventListeners()
 
+            // Dispatching an event when opening a dialog
+            this.dispatchEvent(new CustomEvent('open'))
         } else {
             // If there is an active element, we return the focus to it when the dialog is closed
             if(this.$activeElement) this.$activeElement.focus()            
@@ -240,8 +251,6 @@ export class fureinzzDialog extends LitElement {
         // Set aria attributes
         this.setAttribute('aria-hidden', String(!this.opened))
 
-        // Dispatching an event when the state changes
-        this.dispatchEvent(new CustomEvent(event))
     }
 
     noBackdropChanged (): void {
@@ -271,11 +280,6 @@ export class fureinzzDialog extends LitElement {
                     break;
             }
         });
-    }
-    
-    onAnimationEnd (): void {
-        // If the element has animation and it closes then remove it from view
-        if(this.opened === false) this.style.display = 'none'
     }
 
     connectedCallback (): void {
