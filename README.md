@@ -4,66 +4,34 @@
 [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg?style=flat-square)](https://www.webcomponents.org/element/@fureinzz/fureinzz-dialog)
 ![license](https://img.shields.io/github/license/fureinzz/fureinzz-dialog?style=flat-square)
 
-`<fureinzz-dialog>` is a modern dialog component that provides an extended set of functions for interacting with the user interface. The component implements a focus trap, so when opening a dialog box, the focus will only be directed to the dialog box elements. You can also change the state of the dialog box by assigning the`cancel-button` or `confirm-button` attribute to a button inside the component. When you click this button, the `state-changed` event will appear and the dialog box will close.
 
-**Example:**
+**Creates a easily customizable and accessible component that adds a UI dialog element.  
+**
++ **Accessible** -  When opening a dialog, the focus falls inside the dialog. When the dialog is closed, the focus is restored to the block that opened the component. You can also close the dialog by pressing Esc.
++ **Works with [Shadow DOM](http://https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_shadow_DOM "Shadow DOM")** - Dialog works by using the modern technology of Shadow DOM. This approach improves the experience of using web components
++ **light weight** - the volume of the dialog box is [35.5 KB](https://www.npmjs.com/package/@fureinzz/fureinzz-dialog)
++ **Built using  [WAI-ARIA Authoring Practices](https://www.w3.org/TR/wai-aria-practices/#dialog_modal)**
+
+
+## Usage
+Before using the dialog you must import the component module: `import "@fureinzz/fureinzz-dialog"` or `import {fureinzzDIalog} from "@fureinzz/fureinzz-dialog"`.  After adding the module, you can use `fureinzz-dialog` in your app
+
 ```html
-<fureinzz-dialog opened>
-  <div>
-    <span> Lorem ipsum dolor sit amet consectetur adipisicing elit.</span>
-  </div>
+<fureinzz-dialog>
+    <div> Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
 </fureinzz-dialog>
 ```
 
-## Styling
-If you want to animate a dialog use the Web Animation API
-
-**Example:**
-
-```css
-    @keyframes fadeIn {
-      from {opacity: 0}
-      to   {opacity: 1}
-    }
-    fureinzz-dialog[opened] {animation: fadeIn .3s ease forwards}
-```
-
-
-## Properties
-| Property | type | Description | Default |
-| --- | --- | --- | --- |
-| `opened` | Boolean | Set **true** to show object contents | `false` |
-| `noBackdrop` | Boolean | Set **true** to disable backdrop overlay  | `false` |
-| `closeOnOustideClick` | Boolean | If  **true**, the dialog will be closed if you click outside of its zone| `false` |
-| `closeOnEsc` | Boolean | If **true**, pressing `Esc` will close the dialog| `false` |
-
-
-## Events
-| Event | Description | 
-| --- | --- | 
-| `state-changed`  |Triggered when using the `cancel()` or `confirm()` method|
-
-## Usage
-
-#### Installation
-```
-npm install  @fureinzz/fureinzz-dialog
-```
-
-#### In an HTML file
+To open the dialog, you can specify the `opened` attribute for the html element
 ```html
-<html>
-  <head>
-    <script type="module">
-      import '@fureinzz/fureinzz-dialog/fureinzz-dialog.js'
-    </script>
-  </head>
-  <body>
-    <fureinzz-dialog opened>
-      <div>
-        <span> Lorem ipsum dolor sit amet consectetur adipisicing elit.</span>
-      </div>
-    </fureinzz-dialog>
-  </body>
-</html>
+<fureinzz-dialog opened>
+    <div> Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
+</fureinzz-dialog>
+```
+
+Alternatively you can open the dialog using the `opened` property or using the `open()` method
+```javascript
+const dialog = document.querySelector("fureinzz-dialog"')
+// or dialog.opened = true 
+dialog.open()
 ```
