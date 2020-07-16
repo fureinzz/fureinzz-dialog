@@ -24,10 +24,10 @@ template.innerHTML =   `
             margin-bottom: var(--dialog-margin-bottom, 0);
             margin-left: var(--dialog-margin-left, 0);
             margin-right: var(--dialog-margin-right, 0);
-            width: var(--dialog-width, auto);
+            width: var(--dialog-width, 520px);
             height: var(--dialog-height, auto);
-            max-height: var(--dialog-max-height, auto);
-            max-width: var(--dialog-max-width, 520px);
+            max-height: var(--dialog-max-height;
+            max-width: var(--dialog-max-width);
             box-shadow: var(--dialog-box-shadow);
             border-radius: var(--dialog-border-radius, 5px);
         }
