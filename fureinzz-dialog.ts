@@ -103,7 +103,7 @@ export class fureinzzDialog extends LitElement {
 
         // Dispatching an event for the external environment
         // The result of user selection is added to the event's `detail` property
-        this.dispatchEvent(new CustomEvent('state-changed', {detail: {canceled: false}}))
+        this.dispatchEvent(new CustomEvent('cancel', {detail: {canceled: false}}))
     }
 
     cancel (): void {
@@ -111,7 +111,7 @@ export class fureinzzDialog extends LitElement {
 
         // Dispatching an event for the external environment
         // The result of user selection is added to the event's `detail` property
-        this.dispatchEvent(new CustomEvent('state-changed', {detail: {canceled: true}}))
+        this.dispatchEvent(new CustomEvent('cancel', {detail: {canceled: true}}))
     }
 
     
