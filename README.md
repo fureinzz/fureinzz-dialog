@@ -65,7 +65,18 @@ The dialog can dispatch 3 types of events to the external environment
 
 ## Properties 
 
-+ opened
-+ noBackdrop
-+ noCloseOnOutsideClick
-+ noCloseOnEsc
+
+| Property  | Description |  Default |
+| ------------ | ------------ | ------------ |
+| opened  | If true the dialog will be opened otherwise close |  false |
+| noCloseOnOutsideClick  | If it is false the dialog will be closed when you click outside of its zone  |  false |
+| noCloseOnEsc  |  If false the dialog will be closed when you press Esc | false  |
+| noBackdrop | If it is true then the backdrop will be hidden  |  false |
+
+
+**Example of how you can set a property in an html file:**
+```html
+<fureinzz-dialog opened no-close-on-esc no-bakcdrop>
+    <div> Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
+</fureinzz-dialog>
+```
