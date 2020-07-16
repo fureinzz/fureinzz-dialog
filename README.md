@@ -34,7 +34,7 @@ dialog.open()
 
 ## Styling
 
-You can use CSS variables to styling the dialog more pointwise. All available variables are listed [here]()
+You can use CSS variables to styling the dialog more pointwise. All available variables are listed [here](#CSS-variables)
 
 You can also easily change the position of the dialog. Since the component is positioned relative to the parent, you can specify any location for the element using `flexbox` or `grid`
 
@@ -44,6 +44,21 @@ You can also easily change the position of the dialog. Since the component is po
     <img src="https://cdn1.savepice.ru/uploads/2020/7/15/efcb3dd48de1c5f21948ced221ea9b75-full.png" style="border-radius: 6px;">
 </div>
 
+## Properties 
+
+When initializing a component each of the properties presented is false by default
+
++ **opened** -  If `true` the dialog will be opened otherwise closed 
++ **noCloseOnOutsideClick** - If it is `false` the dialog will be closed when you click outside of its zone
++ **noCloseOnEsc** - If `false` the dialog will be closed when you press `Esc` 
++ **noBackdrop** - If it is `true` then the backdrop will be hidden
+
+**Example of how you can set a property in an html file:**
+```html
+<fureinzz-dialog opened no-close-on-esc no-bakcdrop>
+    <div> Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
+</fureinzz-dialog>
+```
 
 ## Events 
 The dialog can dispatch 3 types of events to the external environment
@@ -63,22 +78,24 @@ The dialog can dispatch 3 types of events to the external environment
     })
 ```
 
-## Properties 
-**Example of how you can set a property in an html file:**
-```html
-<fureinzz-dialog opened no-close-on-esc no-bakcdrop>
-    <div> Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
-</fureinzz-dialog>
-```
+## CSS-variables
 
-| Property  | Description |  Default |
-| ------------ | ------------ | ------------ |
-| opened  | If true the dialog will be opened otherwise close |  false |
-| noCloseOnOutsideClick  | If it is false the dialog will be closed when you click outside of its zone  |  false |
-| noCloseOnEsc  |  If false the dialog will be closed when you press Esc | false  |
-| noBackdrop | If it is true then the backdrop will be hidden  |  false |
+Here are all the css properties that you can manipulate to change the appearance of both the dialog and the background
 
+ #### Dialog:
++ *--dialog-padding*
++ *--dialog-background*
++ *--dialog-margin*
++ *--dialog-width*
++ *--dialog-height*
++ *--dialog-max-height*
++ *--dialog-max-width*
++ *--dialog-box-shadow*
++ *--dialog-border-radius*
+#### Backdrop:
 
++ *--backdrop-background*
++ *--backdrop-opacity*
 ## Installation 
 
 We recommend using [npm](https://www.npmjs.com/package/@fureinzz/fureinzz-dialog) for installation
