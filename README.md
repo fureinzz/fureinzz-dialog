@@ -64,7 +64,12 @@ The dialog can dispatch 3 types of events to the external environment
 ```
 
 ## Properties 
-
+**Example of how you can set a property in an html file:**
+```html
+<fureinzz-dialog opened no-close-on-esc no-bakcdrop>
+    <div> Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
+</fureinzz-dialog>
+```
 
 | Property  | Description |  Default |
 | ------------ | ------------ | ------------ |
@@ -74,9 +79,10 @@ The dialog can dispatch 3 types of events to the external environment
 | noBackdrop | If it is true then the backdrop will be hidden  |  false |
 
 
-**Example of how you can set a property in an html file:**
-```html
-<fureinzz-dialog opened no-close-on-esc no-bakcdrop>
-    <div> Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
-</fureinzz-dialog>
+## Installation 
+
+We recommend using [npm](https://www.npmjs.com/package/@fureinzz/fureinzz-dialog) for installation
+
+```
+npm install @fureinzz/fureinzz-dialog
 ```
