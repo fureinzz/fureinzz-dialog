@@ -92,6 +92,7 @@ Here are all the css properties that you can manipulate to change the appearance
 + *--dialog-max-width*
 + *--dialog-box-shadow*
 + *--dialog-border-radius*
+
 **Backdrop:**
 
 + *--backdrop-background*
