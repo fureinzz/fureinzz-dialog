@@ -82,7 +82,7 @@ The dialog can dispatch 3 types of events to the external environment
 
 Here are all the css properties that you can manipulate to change the appearance of both the dialog and the background
 
- #### Dialog:
+**Dialog:**
 + *--dialog-padding*
 + *--dialog-background*
 + *--dialog-margin*
@@ -92,7 +92,7 @@ Here are all the css properties that you can manipulate to change the appearance
 + *--dialog-max-width*
 + *--dialog-box-shadow*
 + *--dialog-border-radius*
-#### Backdrop:
+**Backdrop:**
 
 + *--backdrop-background*
 + *--backdrop-opacity*
