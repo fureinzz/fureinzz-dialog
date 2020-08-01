@@ -26,7 +26,7 @@ template.innerHTML =   `
             margin-right: var(--dialog-margin-right, 0);
             width: var(--dialog-width, 520px);
             height: var(--dialog-height, auto);
-            max-height: var(--dialog-max-height;
+            max-height: var(--dialog-max-height);
             max-width: var(--dialog-max-width);
             box-shadow: var(--dialog-box-shadow);
             border-radius: var(--dialog-border-radius, 5px);
