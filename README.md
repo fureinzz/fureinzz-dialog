@@ -15,6 +15,14 @@
 + **Built using  [WAI-ARIA Authoring Practices](https://www.w3.org/TR/wai-aria-practices/#dialog_modal)** - Building using Aria attributes and focus trap
 + **light weight** - the volume of the dialog box is **[35.5 KB](https://www.npmjs.com/package/@fureinzz/fureinzz-dialog)**
 
+## Installation 
+
+We recommend using [npm](https://www.npmjs.com/package/@fureinzz/fureinzz-dialog) for installation
+
+```
+npm install @fureinzz/fureinzz-dialog
+```
+
 ## Usage
 Before using the dialog you must import the component module: ( `import "@fureinzz/fureinzz-dialog"` ).  After adding the module, you can use `fureinzz-dialog` in your app
 
@@ -37,12 +45,6 @@ dialog.open()
 You can use CSS variables to styling the dialog more pointwise. All available variables are listed [here](#CSS-variables)
 
 You can also easily change the position of the dialog. Since the component is positioned relative to the parent, you can specify any location for the element using `flexbox` or `grid`
-
-**Example of what your dialog might look like:**
-
-<div style="text-align: center">
-    <img src="https://cdn1.savepice.ru/uploads/2020/7/15/efcb3dd48de1c5f21948ced221ea9b75-full.png" style="border-radius: 6px;">
-</div>
 
 ## Properties 
 
@@ -97,10 +99,3 @@ Here are all the css properties that you can manipulate to change the appearance
 
 + *--backdrop-background*
 + *--backdrop-opacity*
-## Installation 
-
-We recommend using [npm](https://www.npmjs.com/package/@fureinzz/fureinzz-dialog) for installation
-
-```
-npm install @fureinzz/fureinzz-dialog
-```
